@@ -107,7 +107,7 @@ body {
 /* === Project Images === */
 .project-image {
   display: block;
-  width: 600px;
+  width: 700px;
   max-width: 100%;
   height: auto;
   margin: 1rem auto;
@@ -188,7 +188,7 @@ footer {
 
 .project.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(20);
 }
 
 

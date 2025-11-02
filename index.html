@@ -84,10 +84,10 @@
   // === Staggered fade-in for projects ===
   const projects = document.querySelectorAll('.project');
 
+  // === Intersection Observer for scroll fade ===
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
       if (entry.isIntersecting) {
-        // Add a slight delay for each project
         entry.target.style.transitionDelay = `${index * 150}ms`;
         entry.target.classList.add('visible');
       } else {
@@ -99,10 +99,20 @@
 
   projects.forEach(el => observer.observe(el));
 
+  // === Make the first two visible immediately on page load (but still observed) ===
+  window.addEventListener("load", () => {
+    projects.forEach((project, i) => {
+      if (i < 2) {
+        project.classList.add('visible');
+        project.style.transitionDelay = `${i * 150}ms`;
+      }
+    });
+  });
+
 
   // === Smooth page transitions ===
 
-  // Handle browser back/forward navigation (fix for white screen)
+  // Fix for white screen when using back/forward navigation
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
       document.body.classList.add('loaded');
@@ -131,6 +141,7 @@
     });
   });
 </script>
+
 
 
 
