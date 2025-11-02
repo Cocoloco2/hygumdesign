@@ -21,7 +21,7 @@ body {
 /* === Sidebar (fixed about section) === */
 .sidebar {
   position: sticky;
-  top: 2rem;
+  top: none;
   flex: 1.;
   max-width: 400px;
   height: fit-content;
@@ -199,3 +199,46 @@ body {
 body.loaded {
   opacity: 1;
 }
+
+
+
+/* === Experience Section in Sidebar === */
+.experience {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.experience h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #111;
+}
+
+.exp-item {
+  margin-bottom: 1.2rem;
+}
+
+.exp-item strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 0.2rem;
+}
+
+.exp-item p {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 0;
+}
+
+.exp-item em {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.1rem;
+}
+
