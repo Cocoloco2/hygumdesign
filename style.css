@@ -11,9 +11,10 @@ body {
 /* === Two-column Layout === */
 .container {
   display: flex;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 1250px;  /* small bump for breathing room */
+  margin-left: auto;
+  margin-right: 25rem; /* pulls container slightly left */
+  padding: 2rem 1rem; /* slightly tighter padding */
   gap: 3rem;
 }
 
@@ -21,8 +22,8 @@ body {
 .sidebar {
   position: sticky;
   top: 2rem;
-  flex: 1.5;
-  max-width: 600px;
+  flex: 1.;
+  max-width: 400px;
   height: fit-content;
   align-self: flex-start;
   border-right: 1px solid #eee;
