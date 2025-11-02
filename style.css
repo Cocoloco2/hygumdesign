@@ -161,21 +161,41 @@ footer {
 @media (max-width: 800px) {
   .container {
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .sidebar {
     position: static;
     max-width: 100%;
-    text-align: center;
+    text-align: left; /* instead of center */
     border-right: none;
     padding-right: 0;
+    padding-bottom: 2rem;
+  }
+
+  .sidebar p {
+    font-size: 1rem; /* slightly larger text */
+    line-height: 1.8; /* more readable on phones */
+    max-width: 600px; /* prevents over-wrapping */
+    margin: 0 auto 1rem;
+  }
+
+  .sidebar h1,
+  .sidebar h2,
+  .sidebar h3 {
+    text-align: left;
+  }
+
+  .contact-links {
+    text-align: left;
+    margin-top: 1.5rem;
   }
 
   .contact-links a {
-    margin: 0.3rem;
+    margin: 0.3rem 0.5rem 0.3rem 0;
   }
 }
+
 
 
 
