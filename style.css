@@ -21,8 +21,8 @@ body {
 .sidebar {
   position: sticky;
   top: 2rem;
-  flex: 1;
-  max-width: 280px;
+  flex: 1.5;
+  max-width: 600px;
   height: fit-content;
   align-self: flex-start;
   border-right: 1px solid #eee;
