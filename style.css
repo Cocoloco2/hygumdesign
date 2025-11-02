@@ -11,12 +11,12 @@ body {
 /* === Two-column Layout === */
 .container {
   display: flex;
-  max-width: 1250px;  /* small bump for breathing room */
-  margin-left: auto;
-  margin-right: 25rem; /* pulls container slightly left */
-  padding: 2rem 1rem; /* slightly tighter padding */
+  max-width: 1250px;
+  margin: 0 auto; /* centers correctly at all sizes */
+  padding: 2rem 1rem;
   gap: 3rem;
 }
+
 
 /* === Sidebar (fixed about section) === */
 .sidebar {
@@ -157,33 +157,35 @@ footer {
   color: #777;
 }
 
-/* === Responsive Layout === */
-@media (max-width: 800px) {
+/* === Responsive Layout (Mobile + Tablet) === */
+@media (max-width: 1000px) {
   .container {
     flex-direction: column;
     padding: 1.5rem;
+    max-width: 100%;
   }
 
   .sidebar {
     position: static;
     max-width: 100%;
-    text-align: left; /* instead of center */
+    width: 100%;
     border-right: none;
     padding-right: 0;
     padding-bottom: 2rem;
-  }
-
-  .sidebar p {
-    font-size: 1rem; /* slightly larger text */
-    line-height: 1.8; /* more readable on phones */
-    max-width: 600px; /* prevents over-wrapping */
-    margin: 0 auto 1rem;
+    text-align: left;
   }
 
   .sidebar h1,
   .sidebar h2,
   .sidebar h3 {
     text-align: left;
+  }
+
+  .sidebar p {
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 0 1rem 0;
   }
 
   .contact-links {
@@ -194,7 +196,41 @@ footer {
   .contact-links a {
     margin: 0.3rem 0.5rem 0.3rem 0;
   }
+
+  /* Make project section full width */
+  .content {
+    width: 100%;
+    flex: 1;
+  }
+
+  .projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .project {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  /* Fix distorted images */
+  .project-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* Improve spacing for small screens */
+  .section-intro {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    padding: 0 0.5rem;
+  }
 }
+
 
 
 
