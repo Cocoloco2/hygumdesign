@@ -254,7 +254,23 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY = 'open-calls-list';
+/* ====================================================================
+   JSONBIN.IO CONFIG — fill these in before publishing to GitHub Pages.
+   1. Create a free account at https://jsonbin.io
+   2. Create a new bin with this exact starting content:
+      { "calls": [] }
+   3. Copy the Bin ID into BIN_ID below.
+   4. In the bin's settings, create an ACCESS KEY (not the master key)
+      scoped to this bin only, with read + update permission, and copy
+      it into ACCESS_KEY below. Using a scoped access key (rather than
+      your account's master key) means if someone views your page
+      source, the worst they can do is edit this one bin — not your
+      whole JSONBin account.
+   ==================================================================== */
+const BIN_ID = '6a52c931f5f4af5e29825404';
+const ACCESS_KEY = '$2a$10$nsRWE2XIFwvGXY01mxD6JepiLBB2x.CjmqUjppzTnAmE0jT79muiK';
+const JSONBIN_CONFIGURED = BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE' && ACCESS_KEY !== 'PASTE_YOUR_ACCESS_KEY_HERE';
+
 const TODAY = new Date('2026-07-12T00:00:00');
 
 const TYPE_LABELS = {
@@ -350,25 +366,50 @@ function showToast(msg){
 }
 
 async function loadCalls(){
+  if(!JSONBIN_CONFIGURED){
+    calls = SEED;
+    showToast('Set BIN_ID and ACCESS_KEY in the code to enable saving');
+    render();
+    return;
+  }
   try{
-    const result = await window.storage.get(STORAGE_KEY, true);
-    calls = result && result.value ? JSON.parse(result.value) : SEED;
-    if(!result){
-      await window.storage.set(STORAGE_KEY, JSON.stringify(SEED), true);
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+      headers: { 'X-Access-Key': ACCESS_KEY }
+    });
+    if(!res.ok) throw new Error('load failed');
+    const data = await res.json();
+    const stored = data.record && data.record.calls;
+    if(stored && stored.length){
+      calls = stored;
+    } else {
+      // bin is empty — seed it once
+      calls = SEED;
+      await saveCalls();
     }
   }catch(e){
     calls = SEED;
-    try{ await window.storage.set(STORAGE_KEY, JSON.stringify(SEED), true); }catch(e2){}
+    showToast('Could not reach shared storage — showing defaults');
   }
   render();
 }
 
 async function saveCalls(){
+  if(!JSONBIN_CONFIGURED){
+    showToast('Set BIN_ID and ACCESS_KEY in the code to enable saving');
+    return;
+  }
   try{
-    const res = await window.storage.set(STORAGE_KEY, JSON.stringify(calls), true);
-    if(!res) showToast('Could not save — try again');
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Key': ACCESS_KEY
+      },
+      body: JSON.stringify({ calls })
+    });
+    if(!res.ok) throw new Error('save failed');
   }catch(e){
-    showToast('Storage error — not saved');
+    showToast('Could not save to shared storage');
   }
 }
 
