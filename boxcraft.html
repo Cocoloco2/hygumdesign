@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boxcraft — Laser-cut box generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --panel:#131315;
+    --panel-2:#0e0e10;
+    --border: rgba(255,255,255,0.09);
+    --border-2: rgba(255,255,255,0.14);
+    --gold:#e8b93f;
+    --gold-dim:#c9a237;
+    --text:#f3f1ea;
+    --text-dim:#9a9a9e;
+    --text-dimmer:#6c6c70;
+    --serif: Georgia, 'Times New Roman', serif;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--mono);}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,185,63,0.07), transparent 60%),
+      var(--bg);
+    min-height:100vh;
+  }
+  .page{max-width:1180px;margin:0 auto;padding:56px 28px 90px;}
+
+  .eyebrow{
+    display:flex;align-items:center;gap:9px;
+    font-size:12px;letter-spacing:0.14em;color:var(--gold);
+    text-transform:uppercase;margin-bottom:22px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(232,185,63,0.8);}
+
+  h1{
+    font-family:var(--serif);
+    font-weight:400;
+    font-size:52px;
+    line-height:1.08;
+    letter-spacing:-0.01em;
+    margin:0 0 20px;
+    color:var(--text);
+  }
+  h1 em{ color:var(--gold); font-style:italic; }
+
+  .sub{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--text-dim);
+    max-width:600px;
+    margin:0 0 34px;
+  }
+
+  .tabs{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap;}
+  .pill{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.02em;
+    color:var(--text-dim);
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .pill:hover{border-color:var(--border-2); color:var(--text);}
+  .pill.active{background:var(--gold);border-color:var(--gold);color:#161409;font-weight:600;}
+
+  .hr{border:none;border-top:1px solid var(--border);margin:30px 0;}
+
+  .layout{display:grid;grid-template-columns:330px 1fr;gap:22px;align-items:start;}
+  @media (max-width: 880px){ .layout{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+  }
+  .card + .card{margin-top:18px;}
+
+  .card-title{
+    font-size:11px;letter-spacing:0.13em;text-transform:uppercase;
+    color:var(--text-dimmer);margin-bottom:16px;
+  }
+
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:12.5px;color:var(--text-dim);margin-bottom:7px;
+  }
+  .field label .val{color:var(--gold);font-weight:600;}
+  .field input[type=number]{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--border);
+    border-radius:9px;
+    color:var(--text);
+    font-family:var(--mono);
+    font-size:14px;
+    padding:10px 12px;
+    outline:none;
+  }
+  .field input[type=number]:focus{border-color:var(--gold);}
+  .field input[type=range]{
+    width:100%;accent-color:#e8b93f;
+  }
+  .field-desc{
+    font-size:11px;line-height:1.5;color:var(--text-dimmer);margin-top:7px;
+  }
+
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 0;
+  }
+  .toggle-row .lbl{font-size:13px;color:var(--text);}
+  .toggle-row .desc{font-size:11.5px;color:var(--text-dimmer);margin-top:2px;}
+  .switch{
+    position:relative;width:42px;height:24px;flex:none;cursor:pointer;
+    background:var(--panel-2);border:1px solid var(--border-2);border-radius:999px;
+    transition:background .15s ease;
+  }
+  .switch.on{background:var(--gold);border-color:var(--gold);}
+  .switch .knob{
+    position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+    background:#eee;transition:left .15s ease;
+  }
+  .switch.on .knob{left:20px;background:#161409;}
+
+  .render-card{
+    background:var(--panel);border:1px solid var(--border);border-radius:16px;
+    padding:0;overflow:hidden;margin-bottom:18px;
+  }
+  .render-label{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 20px;border-bottom:1px solid var(--border);
+    font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-dimmer);
+  }
+  .render-label .dims{color:var(--gold);letter-spacing:0;text-transform:none;font-size:12.5px;}
+  #three-container{width:100%;height:420px;cursor:grab;}
+  #three-container:active{cursor:grabbing;}
+  .hint{font-size:11px;color:var(--text-dimmer);padding:10px 20px 16px;}
+
+  #flat-svg-wrap{padding:18px 20px 22px;overflow:auto;background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 14px);}
+  #flat-svg{width:100%;height:auto;display:block;}
+  .panel-path{fill:none;stroke:var(--gold);stroke-width:0.7;}
+  .panel-name{fill:var(--text-dimmer);font-family:var(--mono);}
+
+  .cta{
+    width:100%;
+    background:var(--gold);
+    color:#171409;
+    border:none;
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:13.5px;
+    letter-spacing:0.03em;
+    padding:15px 20px;
+    border-radius:11px;
+    cursor:pointer;
+    transition:transform .1s ease, background .15s ease;
+  }
+  .cta:hover{background:#f2c455;}
+  .cta:active{transform:scale(0.99);}
+
+  .stat-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+  .stat{
+    flex:1;min-width:110px;
+    background:var(--panel-2);border:1px solid var(--border);border-radius:10px;
+    padding:10px 13px;
+  }
+  .stat .k{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dimmer);}
+  .stat .v{font-size:15px;color:var(--text);margin-top:3px;font-weight:600;}
+  .v .unit{color:var(--text-dimmer);font-size:11px;font-weight:400;}
+
+  .group{display:none;}
+  .group.active{display:block;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="eyebrow"><span class="dot"></span>BOX GENERATOR &middot; LIVE PREVIEW</div>
+  <h1>Design custom <em>laser-cut</em><br>boxes &amp; dividers</h1>
+  <p class="sub">Set your material thickness and box size, watch the finger-jointed panels render in real time, then export a ready-to-cut DXF file.</p>
+
+  <div class="tabs">
+    <button class="pill active" data-tab="box">Box</button>
+    <button class="pill" data-tab="dividers">Dividers</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- CONTROLS -->
+    <div>
+      <div id="group-box" class="group active">
+        <div class="card">
+          <div class="card-title">Dimensions (mm)</div>
+          <div class="field">
+            <label>Width (X) <span class="val" id="v-width">150</span></label>
+            <input type="range" id="width" min="30" max="500" value="150">
+          </div>
+          <div class="field">
+            <label>Depth (Y) <span class="val" id="v-depth">100</span></label>
+            <input type="range" id="depth" min="30" max="500" value="100">
+          </div>
+          <div class="field">
+            <label>Height (Z) <span class="val" id="v-height">80</span></label>
+            <input type="range" id="height" min="20" max="400" value="80">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Material</div>
+          <div class="field">
+            <label>Thickness <span class="val" id="v-thick">3.0</span> mm</label>
+            <input type="range" id="thick" min="1" max="12" step="0.1" value="3">
+          </div>
+          <div class="field" id="kerf-field">
+            <label>Kerf <span class="val" id="v-kerf">0.10</span> mm</label>
+            <input type="range" id="kerf" min="0" max="1" step="0.01" value="0.1">
+            <div class="field-desc">Width the laser burns away per cut. Tabs are trimmed and slots widened by this amount so joints fit snugly — check your cutter's settings or do a quick test cut to find yours.</div>
+          </div>
+          <div class="field" id="tab-field">
+            <label>Target finger width <span class="val" id="v-tab">— mm</span></label>
+            <input type="range" id="tabsize" min="1" max="6" step="0.1" value="2.5">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toggle-row">
+            <div>
+              <div class="lbl">Finger joints</div>
+              <div class="desc">Off = plain straight edges (butt joint, glue required)</div>
+            </div>
+            <div class="switch on" id="toggle-joints"><div class="knob"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toggle-row">
+            <div>
+              <div class="lbl">Include lid</div>
+              <div class="desc">Off = open-top box, 5 panels</div>
+            </div>
+            <div class="switch on" id="toggle-lid"><div class="knob"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="group-dividers" class="group">
+        <div class="card">
+          <div class="toggle-row">
+            <div>
+              <div class="lbl">Add divider grid</div>
+              <div class="desc">Interlocking slot-together dividers</div>
+            </div>
+            <div class="switch" id="toggle-div"><div class="knob"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Grid</div>
+          <div class="field">
+            <label>Columns (dividers across width) <span class="val" id="v-nx">2</span></label>
+            <input type="range" id="nx" min="0" max="6" step="1" value="2">
+          </div>
+          <div class="field">
+            <label>Rows (dividers across depth) <span class="val" id="v-ny">1</span></label>
+            <input type="range" id="ny" min="0" max="6" step="1" value="1">
+          </div>
+          <div class="field">
+            <label>Divider height <span class="val" id="v-dh">— mm</span></label>
+            <input type="range" id="dh" min="10" max="400" step="1" value="60">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div>
+      <div class="render-card">
+        <div class="render-label">
+          <span>3D preview</span>
+          <span class="dims" id="dims-label">150 × 100 × 80 mm</span>
+        </div>
+        <div id="three-container"></div>
+        <div class="hint">Drag to orbit · scroll to zoom</div>
+      </div>
+
+      <div class="render-card">
+        <div class="render-label">
+          <span>Cut layout</span>
+          <span class="dims" id="sheet-label"></span>
+        </div>
+        <div id="flat-svg-wrap"><svg id="flat-svg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      </div>
+
+      <div class="card" style="padding:18px 22px;">
+        <div class="stat-row">
+          <div class="stat"><div class="k">Panels</div><div class="v" id="stat-panels">6</div></div>
+          <div class="stat"><div class="k">Sheet area</div><div class="v" id="stat-area">—</div></div>
+          <div class="stat"><div class="k">Interior vol.</div><div class="v" id="stat-vol">—</div></div>
+        </div>
+      </div>
+
+      <button class="cta" id="downloadBtn" style="margin-top:14px;">⬇ Download DXF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================= GEOMETRY CORE ============================= */
+
+function tabCount(len, t){
+  let n = Math.round(len / (t * 2.4));
+  n = Math.max(3, n);
+  if (n % 2 === 0) n++;
+  return n;
+}
+
+// build the points along one edge from `start` in direction `dir` (unit vector),
+// length `length`, using outward `normal`, material thickness `t`, kerf `k` (total,
+// not half), type 'tab'|'slot'|'flat'.
+// Protrusion DEPTH always equals the full material thickness (so joints actually
+// reach through the mating panel). Kerf only trims the WIDTH of each tooth/notch:
+// tabs are cut slightly narrower and slots slightly wider so the kerf (material
+// removed by the laser beam) is exactly compensated for.
+function edgePts(start, dir, length, t, kerf, normal, type){
+  const n = tabCount(length, t);
+  const seg = length / n;
+  const k = Math.min(kerf / 2, seg * 0.4);
+  let pts = [];
+  let cur = start.slice();
+  for(let i=0;i<n;i++){
+    const next = [cur[0]+dir[0]*seg, cur[1]+dir[1]*seg];
+    const isOut = (i % 2 === 0);
+    if(type === 'tab' && isOut){
+      // narrow the protruding tooth by k on each side
+      const a = [cur[0]+dir[0]*k, cur[1]+dir[1]*k];
+      const b = [next[0]-dir[0]*k, next[1]-dir[1]*k];
+      const p1 = [a[0]+normal[0]*t, a[1]+normal[1]*t];
+      const p2 = [b[0]+normal[0]*t, b[1]+normal[1]*t];
+      pts.push(a,p1,p2,b,next);
+    } else if(type === 'slot' && isOut){
+      // widen the notch by k on each side
+      const a = [cur[0]-dir[0]*k, cur[1]-dir[1]*k];
+      const b = [next[0]+dir[0]*k, next[1]+dir[1]*k];
+      const p1 = [a[0]-normal[0]*t, a[1]-normal[1]*t];
+      const p2 = [b[0]-normal[0]*t, b[1]-normal[1]*t];
+      pts.push(a,p1,p2,b,next);
+    } else {
+      pts.push(next);
+    }
+    cur = next;
+  }
+  return pts;
+}
+
+// build a full rectangular panel (pw x ph) with per-edge joint types
+function buildPanel(pw, ph, t, kerf, edges){
+  let points = [[0,0]];
+  let cur = [0,0];
+  let seg;
+
+  seg = edgePts(cur, [1,0], pw, t, kerf, [0,-1], edges.bottom); points.push(...seg); cur = seg[seg.length-1];
+  seg = edgePts(cur, [0,1], ph, t, kerf, [1,0],  edges.right);  points.push(...seg); cur = seg[seg.length-1];
+  seg = edgePts(cur, [-1,0], pw, t, kerf, [0,1], edges.top);    points.push(...seg); cur = seg[seg.length-1];
+  seg = edgePts(cur, [0,-1], ph, t, kerf, [-1,0], edges.left);  points.push(...seg); cur = seg[seg.length-1];
+
+  return points;
+}
+
+// plain rectangle, no joints — used for the 3D preview so panels render as
+// clean solids instead of the jagged, self-overlapping finger geometry
+function buildSimpleRect(pw, ph){
+  return [[0,0],[pw,0],[pw,ph],[0,ph]];
+}
+
+function notchedLine(length, y, positions, notchW, notchD, dir){
+  let pts=[];
+  const sorted = positions.slice().sort((a,b)=>a-b);
+  sorted.forEach(p=>{
+    const a = Math.max(0, p-notchW/2), b = Math.min(length, p+notchW/2);
+    pts.push([a,y]);
+    pts.push([a,y+dir*notchD]);
+    pts.push([b,y+dir*notchD]);
+    pts.push([b,y]);
+  });
+  return pts;
+}
+
+function buildDividerTop(length, height, notchW, notchD, positions){
+  let pts=[[0,0],[length,0],[length,height]];
+  const notch = notchedLine(length, height, positions, notchW, notchD, -1).reverse();
+  pts.push(...notch);
+  pts.push([0,height],[0,0]);
+  return pts;
+}
+function buildDividerBottom(length, height, notchW, notchD, positions){
+  let pts=[[0,0]];
+  pts.push(...notchedLine(length, 0, positions, notchW, notchD, +1));
+  pts.push([length,0],[length,height],[0,height],[0,0]);
+  return pts;
+}
+
+/* ============================= MODEL BUILD ============================= */
+
+function computeModel(p){
+  const {W,D,H,t,kerf,lid,divOn,nx,ny,dh,jointsOn} = p;
+
+  const lidTop = lid ? 'tab' : 'flat';
+
+  function makePanel(name, pw, ph, edges, tf){
+    const pts = jointsOn ? buildPanel(pw, ph, t, kerf, edges) : buildSimpleRect(pw, ph);
+    return {name, pw, ph, points: pts, simplePoints: buildSimpleRect(pw,ph), tf};
+  }
+
+  const panels = [];
+  panels.push(makePanel('Bottom', W, D, {bottom:'slot',right:'slot',top:'slot',left:'slot'}, m=>({rx:Math.PI/2, ry:0, pos:[0,t,0]})));
+  if(lid){
+    panels.push(makePanel('Top', W, D, {bottom:'slot',right:'slot',top:'slot',left:'slot'}, m=>({rx:Math.PI/2, ry:0, pos:[0,H,0]})));
+  }
+  panels.push(makePanel('Front', W, H, {bottom:'tab',right:'tab',top:lidTop,left:'tab'}, ()=>({rx:0, ry:0, pos:[0,0,0]})));
+  panels.push(makePanel('Back',  W, H, {bottom:'tab',right:'tab',top:lidTop,left:'tab'}, ()=>({rx:0, ry:0, pos:[0,0,D-t]})));
+  panels.push(makePanel('Left',  D, H, {bottom:'tab',right:'slot',top:lidTop,left:'slot'}, ()=>({rx:0, ry:-Math.PI/2, pos:[t,0,0]})));
+  panels.push(makePanel('Right', D, H, {bottom:'tab',right:'slot',top:lidTop,left:'slot'}, ()=>({rx:0, ry:-Math.PI/2, pos:[W,0,0]})));
+
+  const dividers = [];
+  if(divOn && (nx>0 || ny>0)){
+    const interiorW = W - 2*t;
+    const interiorD = D - 2*t;
+    const notchW = t + kerf;
+    const notchD = dh/2;
+
+    // width positions where X-dividers sit (they run front-to-back, spaced across width)
+    const xPositions = []; for(let i=1;i<=nx;i++) xPositions.push(t + interiorW*i/(nx+1));
+    // depth positions where Y-dividers sit (they run left-to-right, spaced across depth)
+    const yDepthPositions = []; for(let j=1;j<=ny;j++) yDepthPositions.push(t + interiorD*j/(ny+1));
+    // crossing coordinates measured along each divider's own length axis, for cutting notches
+    const yPosAlongXDiv = []; for(let j=1;j<=ny;j++) yPosAlongXDiv.push(interiorD*j/(ny+1)); // position along depth axis (X-divider's length)
+    const xPosAlongYDiv = []; for(let i=1;i<=nx;i++) xPosAlongYDiv.push(interiorW*i/(nx+1)); // position along width axis (Y-divider's length)
+
+    // X-dividers run along DEPTH (length=interiorD), spaced across WIDTH; notch on TOP at each Y-divider crossing
+    xPositions.forEach((xp, idx)=>{
+      const pts = buildDividerTop(interiorD, dh, notchW, notchD, yPosAlongXDiv);
+      dividers.push({name:'X-Div '+(idx+1), pw:interiorD, ph:dh, points:pts, simplePoints: buildSimpleRect(interiorD, dh),
+        tf:()=>({rx:0, ry:-Math.PI/2, pos:[xp, t, t]})});
+    });
+    // Y-dividers run along WIDTH (length=interiorW), spaced across DEPTH; notch on BOTTOM at each X-divider crossing
+    yDepthPositions.forEach((yp, idx)=>{
+      const pts = buildDividerBottom(interiorW, dh, notchW, notchD, xPosAlongYDiv);
+      dividers.push({name:'Y-Div '+(idx+1), pw:interiorW, ph:dh, points:pts, simplePoints: buildSimpleRect(interiorW, dh),
+        tf:()=>({rx:0, ry:0, pos:[t, t, yp]})});
+    });
+  }
+
+  return {panels, dividers};
+}
+
+/* ============================= THREE.JS PREVIEW ============================= */
+
+let scene, camera, renderer, group;
+let orbit = { az: 0.7, el: 0.55, dist: 380, target:[0,0,0] };
+let dragging=false, lastX=0,lastY=0;
+
+function initThree(){
+  const container = document.getElementById('three-container');
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(38, container.clientWidth/container.clientHeight, 1, 5000);
+  renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  const amb = new THREE.AmbientLight(0xffffff, 0.55);
+  scene.add(amb);
+  const dir1 = new THREE.DirectionalLight(0xfff2d0, 0.9);
+  dir1.position.set(200,400,300);
+  scene.add(dir1);
+  const dir2 = new THREE.DirectionalLight(0x8899ff, 0.35);
+  dir2.position.set(-300,-100,-200);
+  scene.add(dir2);
+
+  group = new THREE.Group();
+  scene.add(group);
+
+  container.addEventListener('mousedown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+  window.addEventListener('mouseup', ()=>dragging=false);
+  window.addEventListener('mousemove', e=>{
+    if(!dragging) return;
+    const dx = e.clientX-lastX, dy = e.clientY-lastY;
+    orbit.az -= dx*0.006;
+    orbit.el = Math.max(0.12, Math.min(1.5, orbit.el + dy*0.006));
+    lastX=e.clientX; lastY=e.clientY;
+    renderThree();
+  });
+  container.addEventListener('wheel', e=>{
+    e.preventDefault();
+    orbit.dist = Math.max(80, Math.min(1400, orbit.dist + e.deltaY*0.4));
+    renderThree();
+  }, {passive:false});
+  container.addEventListener('touchstart', e=>{ dragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; }, {passive:true});
+  container.addEventListener('touchmove', e=>{
+    if(!dragging) return;
+    const dx = e.touches[0].clientX-lastX, dy = e.touches[0].clientY-lastY;
+    orbit.az -= dx*0.006;
+    orbit.el = Math.max(0.12, Math.min(1.5, orbit.el + dy*0.006));
+    lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+    renderThree();
+  }, {passive:true});
+  window.addEventListener('touchend', ()=>dragging=false);
+
+  window.addEventListener('resize', ()=>{
+    const c = document.getElementById('three-container');
+    camera.aspect = c.clientWidth/c.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(c.clientWidth, c.clientHeight);
+    renderThree();
+  });
+}
+
+function pointsToShape(points){
+  const shape = new THREE.Shape();
+  shape.moveTo(points[0][0], points[0][1]);
+  for(let i=1;i<points.length;i++) shape.lineTo(points[i][0], points[i][1]);
+  shape.closePath();
+  return shape;
+}
+
+function rebuildThreeModel(model, t, center){
+  while(group.children.length) group.remove(group.children[0]);
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xd8a24a, roughness:0.65, metalness:0.08,
+    side: THREE.DoubleSide
+  });
+  const edgeMat = new THREE.LineBasicMaterial({color:0x1a1408, transparent:true, opacity:0.35});
+
+  const allPanels = [...model.panels, ...model.dividers];
+  allPanels.forEach(panel=>{
+    const shape = pointsToShape(panel.simplePoints || panel.points);
+    const geo = new THREE.ExtrudeGeometry(shape, {depth: t, bevelEnabled:false, curveSegments:1});
+    const mesh = new THREE.Mesh(geo, mat);
+    const T = panel.tf();
+    mesh.rotation.set(T.rx, T.ry, 0);
+    mesh.position.set(T.pos[0]-center[0], T.pos[1]-center[1], T.pos[2]-center[2]);
+    group.add(mesh);
+
+    // thin edge outline so panel boundaries stay legible at a glance
+    const edges = new THREE.EdgesGeometry(geo, 25);
+    const line = new THREE.LineSegments(edges, edgeMat);
+    line.rotation.copy(mesh.rotation);
+    line.position.copy(mesh.position);
+    group.add(line);
+  });
+
+  renderThree();
+}
+
+function renderThree(){
+  const x = orbit.dist * Math.sin(orbit.el) * Math.sin(orbit.az);
+  const y = orbit.dist * Math.cos(orbit.el);
+  const z = orbit.dist * Math.sin(orbit.el) * Math.cos(orbit.az);
+  camera.position.set(x,y,z);
+  camera.lookAt(0,0,0);
+  renderer.render(scene, camera);
+}
+
+/* ============================= 2D LAYOUT + DXF ============================= */
+
+function bboxOf(points){
+  let minx=Infinity,miny=Infinity,maxx=-Infinity,maxy=-Infinity;
+  points.forEach(([x,y])=>{ if(x<minx)minx=x; if(x>maxx)maxx=x; if(y<miny)miny=y; if(y>maxy)maxy=y; });
+  return {minx,miny,w:maxx-minx,h:maxy-miny};
+}
+
+function layoutPanels(panels, maxWidth){
+  let x=8, y=8, shelfH=0, totalW=0, totalH=0;
+  const laid = panels.map(p=>{
+    const b = bboxOf(p.points);
+    if(x + b.w + 8 > maxWidth && x > 8){ x=8; y += shelfH+8; shelfH=0; }
+    const ox = x - b.minx, oy = y - b.miny;
+    const pts = p.points.map(([px,py])=>[px+ox, py+oy]);
+    x += b.w + 8;
+    shelfH = Math.max(shelfH, b.h);
+    totalW = Math.max(totalW, x);
+    totalH = Math.max(totalH, y+shelfH+8);
+    return {name:p.name, points:pts, bbox:{x:ox+b.minx, y:oy+b.miny, w:b.w, h:b.h}};
+  });
+  return {laid, totalW, totalH};
+}
+
+function renderSVG(laidOut, totalW, totalH){
+  const svg = document.getElementById('flat-svg');
+  svg.setAttribute('viewBox', `0 0 ${totalW} ${totalH}`);
+  svg.innerHTML='';
+  laidOut.forEach(p=>{
+    const d = 'M ' + p.points.map(pt=>pt[0].toFixed(2)+','+pt[1].toFixed(2)).join(' L ') + ' Z';
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', d);
+    path.setAttribute('class','panel-path');
+    svg.appendChild(path);
+    const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x', p.bbox.x+2);
+    label.setAttribute('y', p.bbox.y+8);
+    label.setAttribute('font-size', Math.max(4, totalW*0.012));
+    label.setAttribute('class','panel-name');
+    label.textContent = p.name;
+    svg.appendChild(label);
+  });
+}
+
+function buildDXF(laidOut, totalH){
+  let s = '0\nSECTION\n2\nHEADER\n0\nENDSEC\n0\nSECTION\n2\nENTITIES\n';
+  laidOut.forEach(p=>{
+    s += '0\nLWPOLYLINE\n8\nCUT\n90\n' + p.points.length + '\n70\n1\n';
+    p.points.forEach(([x,y])=>{
+      s += '10\n' + x.toFixed(3) + '\n20\n' + (totalH - y).toFixed(3) + '\n';
+    });
+  });
+  s += '0\nENDSEC\n0\nEOF\n';
+  return s;
+}
+
+/* ============================= APP WIRING ============================= */
+
+const els = {
+  width: document.getElementById('width'), depth: document.getElementById('depth'), height: document.getElementById('height'),
+  thick: document.getElementById('thick'), kerf: document.getElementById('kerf'), tabsize: document.getElementById('tabsize'),
+  nx: document.getElementById('nx'), ny: document.getElementById('ny'), dh: document.getElementById('dh'),
+};
+let state = { lid:true, divOn:false, jointsOn:true };
+let lastLaidOut=null, lastTotalH=0;
+
+function readParams(){
+  const W = +els.width.value, D = +els.depth.value, H = +els.height.value;
+  const t = +els.thick.value, kerf = +els.kerf.value;
+  const nx = +els.nx.value, ny = +els.ny.value;
+  let dh = Math.min(+els.dh.value, H - 2*t);
+  dh = Math.max(8, dh);
+  return {W,D,H,t,kerf,lid:state.lid,divOn:state.divOn,jointsOn:state.jointsOn,nx,ny,dh};
+}
+
+function fmt(n){ return (Math.round(n*10)/10).toString(); }
+
+function refreshLabels(p){
+  document.getElementById('v-width').textContent = p.W;
+  document.getElementById('v-depth').textContent = p.D;
+  document.getElementById('v-height').textContent = p.H;
+  document.getElementById('v-thick').textContent = fmt(p.t);
+  document.getElementById('v-kerf').textContent = p.kerf.toFixed(2);
+  document.getElementById('v-tab').textContent = fmt(+els.tabsize.value)+' mm';
+  document.getElementById('v-nx').textContent = p.nx;
+  document.getElementById('v-ny').textContent = p.ny;
+  document.getElementById('v-dh').textContent = fmt(p.dh)+' mm';
+  document.getElementById('dims-label').textContent = `${p.W} × ${p.D} × ${p.H} mm`;
+}
+
+function recompute(){
+  const p = readParams();
+  refreshLabels(p);
+
+  const model = computeModel(p);
+  const center = [p.W/2, p.H/2, p.D/2];
+  rebuildThreeModel(model, p.t, center);
+
+  const allPanels = [...model.panels, ...model.dividers];
+  const layout = layoutPanels(allPanels, 620);
+  lastLaidOut = layout.laid; lastTotalH = layout.totalH;
+  renderSVG(layout.laid, layout.totalW, layout.totalH);
+
+  document.getElementById('sheet-label').textContent = `${Math.round(layout.totalW)} × ${Math.round(layout.totalH)} mm`;
+  document.getElementById('stat-panels').textContent = allPanels.length;
+  document.getElementById('stat-area').textContent = (layout.totalW*layout.totalH/1e6).toFixed(3);
+  document.getElementById('stat-area').innerHTML += ' <span class="unit">m²</span>';
+  const iw=(p.W-2*p.t), idd=(p.D-2*p.t), ih=(p.lid? p.H-2*p.t : p.H-p.t);
+  document.getElementById('stat-vol').textContent = ((iw*idd*ih)/1e6).toFixed(2);
+  document.getElementById('stat-vol').innerHTML += ' <span class="unit">L</span>';
+}
+
+[els.width,els.depth,els.height,els.thick,els.kerf,els.tabsize,els.nx,els.ny,els.dh].forEach(el=>{
+  el.addEventListener('input', recompute);
+});
+
+document.getElementById('toggle-joints').addEventListener('click', function(){
+  state.jointsOn = !state.jointsOn;
+  this.classList.toggle('on', state.jointsOn);
+  els.kerf.disabled = !state.jointsOn;
+  els.tabsize.disabled = !state.jointsOn;
+  document.getElementById('kerf-field').style.opacity = state.jointsOn ? 1 : 0.4;
+  document.getElementById('tab-field').style.opacity = state.jointsOn ? 1 : 0.4;
+  recompute();
+});
+document.getElementById('toggle-lid').addEventListener('click', function(){
+  state.lid = !state.lid;
+  this.classList.toggle('on', state.lid);
+  recompute();
+});
+document.getElementById('toggle-div').addEventListener('click', function(){
+  state.divOn = !state.divOn;
+  this.classList.toggle('on', state.divOn);
+  recompute();
+});
+
+document.querySelectorAll('.tabs .pill').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tabs .pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('group-box').classList.toggle('active', tab==='box');
+    document.getElementById('group-dividers').classList.toggle('active', tab==='dividers');
+  });
+});
+
+document.getElementById('downloadBtn').addEventListener('click', ()=>{
+  if(!lastLaidOut) return;
+  const dxf = buildDXF(lastLaidOut, lastTotalH);
+  const blob = new Blob([dxf], {type:'application/dxf'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `box_${els.width.value}x${els.depth.value}x${els.height.value}mm.dxf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+initThree();
+recompute();
+</script>
+</body>
+</html>
