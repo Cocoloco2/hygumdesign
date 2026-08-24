@@ -22,7 +22,8 @@
       <h1>Kristoffer Hygum</h1>
       <p>Digital designer and maker. Focused on interaction design and prototyping.</p>
       <p>
-        This is a growing library of ready-to-use sensor code, written for students and anyone else prototyping with Arduino or ESP32. Copy a snippet,
+        This is a growing library of ready-to-use sensor code, written for students at
+        FABLAB RUC and anyone else prototyping with Arduino or ESP32. Copy a snippet,
         wire up the sensor, and get moving.
       </p>
       <p>
@@ -49,6 +50,7 @@
           <span class="filter-tag" data-filter="environment">Environment</span>
           <span class="filter-tag" data-filter="input">Input</span>
           <span class="filter-tag" data-filter="output">Output</span>
+          <span class="filter-tag" data-filter="led">NeoPixel / LED</span>
         </div>
 
         <!-- HC-SR04 Ultrasonic -->
@@ -235,6 +237,110 @@ void setup() {
 }
 
 void loop() {
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: for loop color change -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Cycle Colors with a For Loop</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). Loops through a list of colors and fills the whole strip with each one in turn — the go-to pattern once you don't want to hardcode every pixel.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show(); // all off
+}
+
+void loop() {
+  uint32_t colors[] = {
+    strip.Color(255, 0, 0),   // red
+    strip.Color(0, 255, 0),   // green
+    strip.Color(0, 0, 255),   // blue
+    strip.Color(255, 255, 0)  // yellow
+  };
+  int numColors = 4;
+
+  for (int c = 0; c < numColors; c++) {
+    for (int i = 0; i < NUMPIXELS; i++) {
+      strip.setPixelColor(i, colors[c]);
+    }
+    strip.show();
+    delay(500);
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: hardcoded per-pixel colors -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Hardcoded Per-Pixel Colors</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">Sets each LED to its own fixed color, one line per pixel. Useful when you want a specific, unchanging pattern rather than something generated in code.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+
+  strip.setPixelColor(0, strip.Color(255, 0, 0));
+  strip.setPixelColor(1, strip.Color(0, 255, 0));
+  strip.setPixelColor(2, strip.Color(0, 0, 255));
+  strip.setPixelColor(3, strip.Color(255, 255, 0));
+  strip.setPixelColor(4, strip.Color(255, 0, 255));
+  strip.setPixelColor(5, strip.Color(0, 255, 255));
+  strip.setPixelColor(6, strip.Color(255, 255, 255));
+  strip.setPixelColor(7, strip.Color(255, 128, 0));
+
+  strip.show();
+}
+
+void loop() {
+  // colors are set once in setup() and just stay lit
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: chase animation -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Chase Animation</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">A single lit pixel runs down the strip and loops back to the start — the classic "Cylon"/chase effect. Swap the color or add a second pixel offset in the loop for variations.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.clear();
+    strip.setPixelColor(i, strip.Color(0, 150, 255));
+    strip.show();
+    delay(80);
+  }
 }</code></pre>
           </div>
         </div>
