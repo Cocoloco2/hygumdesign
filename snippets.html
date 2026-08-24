@@ -16,31 +16,13 @@
     <a href="tools.html">Tools</a>
   </nav>
 
-  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h1>Kristoffer Hygum</h1>
-      <p>Digital designer and maker. Focused on interaction design and prototyping.</p>
-      <p>
-        This is a growing library of ready-to-use sensor code, written for students
-        and anyone else prototyping with Arduino or ESP32. Copy a snippet,
-        wire up the sensor, and get moving.
-      </p>
-      <p>
-        Missing a sensor you're using? Send me a message and I'll add it.
-      </p>
-      <div class="contact-links">
-        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
-        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
-      </div>
-    </aside>
-
+  <div class="container solo">
     <!-- Main Content -->
-    <main class="content">
+    <main class="content solo">
       <section>
         <div class="page-intro">
           <h2>Sensor Snippets</h2>
-          <p>Copy-paste Arduino/ESP32 code for common sensors used in rapid prototyping. Each snippet is a minimal working example, wire it up, upload it, and build from there.</p>
+          <p>Copy-paste Arduino/ESP32 code for common sensors used in rapid prototyping. Each snippet is a minimal working example — wire it up, upload it, and build from there. Drop a photo or GIF into <code>images/snippets/</code> with the filename shown under each snippet to show what it looks like in action.</p>
         </div>
 
         <div class="filter-row">
@@ -58,6 +40,10 @@
           <h3>HC-SR04 — Ultrasonic Distance Sensor</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Distance</span></div>
           <p class="desc">Reads distance in centimeters using the trigger/echo pins. Great for proximity-based interaction, like the Jellyfish installation.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/hcsr04.gif" alt="HC-SR04 demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/hcsr04.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>const int trigPin = 9;
@@ -93,6 +79,10 @@ void loop() {
           <h3>PIR Motion Sensor (HC-SR501)</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Motion</span></div>
           <p class="desc">Digital HIGH/LOW output when motion is detected. Good starting point for presence-triggered installations.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/pir-motion.gif" alt="PIR motion sensor demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/pir-motion.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>const int pirPin = 2;
@@ -121,6 +111,10 @@ void loop() {
           <h3>DHT22 — Temperature &amp; Humidity</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Environment</span></div>
           <p class="desc">Requires the "DHT sensor library" by Adafruit (install via Library Manager). Reads both temperature (°C) and relative humidity.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/dht22.gif" alt="DHT22 demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/dht22.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;DHT.h&gt;
@@ -160,12 +154,16 @@ void loop() {
           <h3>Soil Moisture Sensor — Two-Prong (YL-69 / FC-28)</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Environment</span></div>
           <p class="desc">The cheap two-fork sensor you stick straight into soil. Reads a raw analog value that goes down as the soil gets wetter, and converts it to a 0–100% reading. Wire the AO pin to an analog pin, VCC to 5V, GND to GND.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/soil-moisture.gif" alt="Soil moisture sensor demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/soil-moisture.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>const int soilPin = A0;
 
 // Calibrate these for your own sensor + soil:
-// Probe in dry air and note the value, then in water and note that one.
+// dip the probe in dry air and note the value, then in water and note that one.
 const int dryValue = 850;  // raw reading in dry soil / air
 const int wetValue = 350;  // raw reading in water / fully wet soil
 
@@ -194,6 +192,10 @@ void loop() {
           <h3>Potentiometer — Analog Read</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Input</span></div>
           <p class="desc">Reads a 0–1023 value and maps it to a usable range. Useful for dials, sliders, and manual control inputs.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/potentiometer.gif" alt="Potentiometer demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/potentiometer.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>const int potPin = A0;
@@ -221,6 +223,10 @@ void loop() {
           <h3>Servo Motor — Sweep</h3>
           <div class="snippet-meta"><span>Arduino</span><span>Output</span></div>
           <p class="desc">Basic servo sweep using the built-in Servo library. A good base for kinetic mechanisms.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/servo-sweep.gif" alt="Servo sweep demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/servo-sweep.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Servo.h&gt;
@@ -249,6 +255,10 @@ void loop() {
           <h3>ESP32 — Connect to WiFi</h3>
           <div class="snippet-meta"><span>ESP32</span><span>Output</span></div>
           <p class="desc">Minimal boilerplate to get an ESP32 on your network — the first step for anything web-connected.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/esp32-wifi.gif" alt="ESP32 WiFi demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/esp32-wifi.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;WiFi.h&gt;
@@ -280,6 +290,10 @@ void loop() {
           <h3>NeoPixel — Cycle Colors with a For Loop</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). A small helper function fills every pixel with one color at a time — call it with different red/green/blue values to cycle colors, no arrays or fancy types needed.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-forloop.gif" alt="NeoPixel color cycle demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-forloop.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -323,6 +337,10 @@ void setAllPixels(int red, int green, int blue) {
           <h3>NeoPixel — Hardcoded Per-Pixel Colors</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">Sets each LED to its own fixed color, one line per pixel. Useful when you want a specific, unchanging pattern rather than something generated in code.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-hardcoded.gif" alt="NeoPixel hardcoded colors demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-hardcoded.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -358,6 +376,10 @@ void loop() {
           <h3>NeoPixel — Chase Animation</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">A single lit pixel runs down the strip and loops back to the start — the classic "Cylon"/chase effect. Swap the color or add a second pixel offset in the loop for variations.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-chase.gif" alt="NeoPixel chase animation demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-chase.gif</code></div>
+          </div>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -391,6 +413,14 @@ void loop() {
   </div>
 
   <script>
+    // Show a placeholder if no image/gif has been added yet for a snippet
+    document.querySelectorAll('.snippet-media img').forEach(img => {
+      img.addEventListener('error', () => {
+        img.style.display = 'none';
+        img.closest('.snippet-media').classList.add('empty');
+      });
+    });
+
     // Copy-to-clipboard
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
