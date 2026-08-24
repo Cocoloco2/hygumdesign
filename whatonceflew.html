@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Once Flew — Kristoffer Hygum</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="index.html">Portfolio</a>
+    <a href="snippets.html">Sensor Snippets</a>
+    <a href="tools.html">Tools</a>
+  </nav>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1>Kristoffer Hygum</h1>
+      <p>Digital designer and maker. Focused on interaction design and prototyping.</p>
+      <p>
+        I’m Kristoffer Hygum, a digital designer and maker with a master’s degree in Digital Transformation from Roskilde University.
+      </p>
+      <p>
+        My work explores how technology, design, and rapid prototyping can create new forms of interaction and experience.
+      </p>
+      <p>
+        I have a hands-on approach to design, often working with laser cutting, 3D printing, and fabrication tools to prototype and test ideas quickly.
+      </p>
+      <p>
+        I work as a technological consultant at EK, helping others bring creative and technical projects to life.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
+        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <section>
+        <h2>What Once Flew</h2>
+        <p>A kinetic sculpture for Roskilde Festival 2026, built around a butterfly that went extinct the same year the festival began.</p>
+
+        <img src="images/WhatOnceFlew1.jpg" alt="What Once Flew — render of the creature, front view" class="project-image">
+
+        <p>
+          In this group, we're fascinated by how skilled nature is at designing beautiful things —
+          and how skilled we humans are at destroying them.
+        </p>
+        <p>
+          Roskilde Festival began in 1971. That same year, a butterfly called the <em>Herorandøje</em>
+          went extinct. And we kept going. For the last 55 years we've lived our lives without giving
+          much thought to the fact that it hasn't been part of our world — like so many other species
+          lost in that same period.
+        </p>
+        <p>
+          This year, we're bringing it back as a "creature of the forest": a strange, utopian, unknown
+          animal. Not because it chose to become that, but because we made it that way.
+        </p>
+
+        <img src="images/WhatOnceFlew2.jpg" alt="What Once Flew — close-up render of the wings and body" class="project-image">
+
+        <p>
+          We've imagined it as a hybrid creature, built from metal, acrylic, or a combination of both.
+          Its body should feel both fragile and unnatural — as if it has been brought back through human
+          hands rather than through nature itself. The materials make it clear that this isn't just a
+          butterfly, but something reconstructed and transformed.
+        </p>
+        <p>
+          When activated by an audience, it doesn't fly gracefully. Its movement is deliberately strange,
+          heavy, and a little uncanny. Instead of mirroring the lightness of a living butterfly, it moves
+          like a constructed version of life — as if something extinct is trying to return through the
+          materials we've given it.
+        </p>
+        <p>
+          We want to start a conversation with the audience about how complex and layered "sustainability"
+          really is, and how far into an urgent mission we already are — the mission of finding balance
+          between people and nature. Our hope is that people leave with a heightened awareness of the
+          resources we consume, and the impact we have, every day, on our shared planet and everything
+          living on it.
+        </p>
+
+        <img src="images/WhatOnceFlew3.jpg" alt="Cardboard prototype of the creature with a string-pull mechanism" class="project-image">
+
+        <p>
+          <strong>Prototyping the movement.</strong> We've found an old actuator, which we're currently
+          using to prototype how the creature could move. In parallel, we're developing a mechanical,
+          power-free alternative — a hand crank that lets the visitor make it fly themselves.
+        </p>
+
+        <img src="images/WhatOnceFlew4.jpg" alt="Laser-cut wing prototype in cardboard and acrylic, held up to a window" class="project-image">
+        <img src="images/WhatOnceFlew5.jpg" alt="Both wing prototypes laid out, showing acrylic panels catching the light" class="project-image">
+
+        <p>
+          <strong>Material experiments.</strong> Alongside the mechanism, we're running material
+          experiments for the wings — especially looking at how to use light meaningfully, letting it
+          reflect through the material, and finding a material strong enough to carry the wing structure
+          through good weather and bad, while still being made from reused material.
+        </p>
+
+        <img src="images/WhatOnceFlew6.jpg" alt="Prototype hinge and actuator experiment for the wing mechanism" class="project-image">
+
+        <p>
+          A collaboration between Kristoffer Hygum Nielsen, Frederik Göbel, and Rikke van Hauen —
+          made for RF x RUC '26.
+        </p>
+
+        <a href="index.html" class="project-button">← Back to Portfolio</a>
+      </section>
+
+      <footer>
+        <p>© 2025 Kristoffer Hygum</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Project fade-in animation + page transition -->
+<script>
+  const projects = document.querySelectorAll('.project');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = `${index * 150}ms`;
+        entry.target.classList.add('visible');
+      } else {
+        entry.target.classList.remove('visible');
+        entry.target.style.transitionDelay = '0ms';
+      }
+    });
+  }, { threshold: 0.2 });
+
+  projects.forEach(el => observer.observe(el));
+
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      document.body.classList.add('loaded');
+    }
+  });
+
+  window.addEventListener('load', () => {
+    document.body.classList.add('loaded');
+  });
+
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (
+        href &&
+        !href.startsWith('#') &&
+        !href.startsWith('mailto:') &&
+        !href.startsWith('http')
+      ) {
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => (window.location = href), 300);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
