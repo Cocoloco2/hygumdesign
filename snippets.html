@@ -245,7 +245,7 @@ void loop() {
         <div class="snippet-card" data-category="led">
           <h3>NeoPixel — Cycle Colors with a For Loop</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
-          <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). Loops through a list of colors and fills the whole strip with each one in turn — the go-to pattern once you don't want to hardcode every pixel.</p>
+          <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). A small helper function fills every pixel with one color at a time — call it with different red/green/blue values to cycle colors, no arrays or fancy types needed.</p>
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -257,25 +257,29 @@ Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 void setup() {
   strip.begin();
-  strip.show(); // all off
+  strip.show(); // turn all pixels off
 }
 
 void loop() {
-  uint32_t colors[] = {
-    strip.Color(255, 0, 0),   // red
-    strip.Color(0, 255, 0),   // green
-    strip.Color(0, 0, 255),   // blue
-    strip.Color(255, 255, 0)  // yellow
-  };
-  int numColors = 4;
+  setAllPixels(255, 0, 0);   // red
+  delay(500);
 
-  for (int c = 0; c < numColors; c++) {
-    for (int i = 0; i < NUMPIXELS; i++) {
-      strip.setPixelColor(i, colors[c]);
-    }
-    strip.show();
-    delay(500);
+  setAllPixels(0, 255, 0);   // green
+  delay(500);
+
+  setAllPixels(0, 0, 255);   // blue
+  delay(500);
+
+  setAllPixels(255, 255, 0); // yellow
+  delay(500);
+}
+
+// Sets every pixel on the strip to the same color
+void setAllPixels(int red, int green, int blue) {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.setPixelColor(i, strip.Color(red, green, blue));
   }
+  strip.show();
 }</code></pre>
           </div>
         </div>
