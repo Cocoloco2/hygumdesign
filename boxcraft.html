@@ -26,10 +26,6 @@
 ToDo list: 
 Make the preview better 
 STL function, make the case 3d printable
-If box is selected, box dividers should be disabled
-Move finger joints toggle above material group 
-Move open/Closed up under dimensions 
-
 */
  
   *{box-sizing:border-box;}
@@ -220,16 +216,36 @@ Move open/Closed up under dimensions
         <div class="card">
           <div class="card-title">Dimensions (mm)</div>
           <div class="field">
-            <label>Width (X) <span class="val" id="v-width">150</span></label>
-            <input type="range" id="width" min="30" max="500" value="150">
+            <label>Width (X)</label>
+            <input type="number" id="width" min="30" max="500" step="1" value="150">
           </div>
           <div class="field">
-            <label>Depth (Y) <span class="val" id="v-depth">100</span></label>
-            <input type="range" id="depth" min="30" max="500" value="100">
+            <label>Depth (Y)</label>
+            <input type="number" id="depth" min="30" max="500" step="1" value="100">
           </div>
           <div class="field">
-            <label>Height (Z) <span class="val" id="v-height">80</span></label>
-            <input type="range" id="height" min="20" max="400" value="80">
+            <label>Height (Z)</label>
+            <input type="number" id="height" min="20" max="400" step="1" value="80">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toggle-row">
+            <div>
+              <div class="lbl">Open- / Closed box</div>
+              <div class="desc">Off = open-top box, 5 panels</div>
+            </div>
+            <div class="switch on" id="toggle-lid"><div class="knob"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="toggle-row">
+            <div>
+              <div class="lbl">Finger joints</div>
+              <div class="desc">Off = plain straight edges (butt joint, glue required)</div>
+            </div>
+            <div class="switch on" id="toggle-joints"><div class="knob"></div></div>
           </div>
         </div>
 
@@ -247,26 +263,6 @@ Move open/Closed up under dimensions
           <div class="field" id="tab-field">
             <label>Target finger width <span class="val" id="v-tab">— mm</span></label>
             <input type="range" id="tabsize" min="1" max="6" step="0.1" value="2.5">
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="toggle-row">
-            <div>
-              <div class="lbl">Finger joints</div>
-              <div class="desc">Off = plain straight edges (butt joint, glue required)</div>
-            </div>
-            <div class="switch on" id="toggle-joints"><div class="knob"></div></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="toggle-row">
-            <div>
-              <div class="lbl">Open- / Closed box</div>
-              <div class="desc">Off = open-top box, 5 panels</div>
-            </div>
-            <div class="switch on" id="toggle-lid"><div class="knob"></div></div>
           </div>
         </div>
       </div>
@@ -666,9 +662,6 @@ function readParams(){
 function fmt(n){ return (Math.round(n*10)/10).toString(); }
 
 function refreshLabels(p){
-  document.getElementById('v-width').textContent = p.W;
-  document.getElementById('v-depth').textContent = p.D;
-  document.getElementById('v-height').textContent = p.H;
   document.getElementById('v-thick').textContent = fmt(p.t);
   document.getElementById('v-kerf').textContent = p.kerf.toFixed(2);
   document.getElementById('v-tab').textContent = fmt(+els.tabsize.value)+' mm';
@@ -731,6 +724,12 @@ document.querySelectorAll('.tabs .pill').forEach(btn=>{
     const tab = btn.dataset.tab;
     document.getElementById('group-box').classList.toggle('active', tab==='box');
     document.getElementById('group-dividers').classList.toggle('active', tab==='dividers');
+
+    if(tab === 'box' && state.divOn){
+      state.divOn = false;
+      document.getElementById('toggle-div').classList.remove('on');
+      recompute();
+    }
   });
 });
 
