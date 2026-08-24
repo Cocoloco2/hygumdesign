@@ -1,13 +1,6 @@
 <!DOCTYPE html>
-/* 
-ToDo list: 
-Make the preview better 
-STL function, make the case 3d printable
-If box is selected, box dividers should be disabled
-Move finger joints toggle above material group 
-Move open/Closed up under dimensions
 
-*/ 
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -29,6 +22,16 @@ Move open/Closed up under dimensions
     --serif: Georgia, 'Times New Roman', serif;
     --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   }
+  /* 
+ToDo list: 
+Make the preview better 
+STL function, make the case 3d printable
+If box is selected, box dividers should be disabled
+Move finger joints toggle above material group 
+Move open/Closed up under dimensions 
+
+*/
+ 
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--mono);}
   body{
@@ -258,7 +261,7 @@ Move open/Closed up under dimensions
         <div class="card">
           <div class="toggle-row">
             <div>
-              <div class="lbl">Include lid</div>
+              <div class="lbl">Open- / Closed box</div>
               <div class="desc">Off = open-top box, 5 panels</div>
             </div>
             <div class="switch on" id="toggle-lid"><div class="knob"></div></div>
