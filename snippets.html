@@ -155,6 +155,40 @@ void loop() {
           </div>
         </div>
 
+        <!-- Soil Moisture Sensor -->
+        <div class="snippet-card" data-category="environment">
+          <h3>Soil Moisture Sensor — Two-Prong (YL-69 / FC-28)</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Environment</span></div>
+          <p class="desc">The cheap two-fork sensor you stick straight into soil. Reads a raw analog value that goes down as the soil gets wetter, and converts it to a 0–100% reading. Wire the AO pin to an analog pin, VCC to 5V, GND to GND.</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>const int soilPin = A0;
+
+// Calibrate these for your own sensor + soil:
+// dip the probe in dry air and note the value, then in water and note that one.
+const int dryValue = 850;  // raw reading in dry soil / air
+const int wetValue = 350;  // raw reading in water / fully wet soil
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(soilPin);
+  int moisturePercent = map(raw, dryValue, wetValue, 0, 100);
+  moisturePercent = constrain(moisturePercent, 0, 100);
+
+  Serial.print("Raw: ");
+  Serial.print(raw);
+  Serial.print("  Moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println(" %");
+
+  delay(500);
+}</code></pre>
+          </div>
+        </div>
+
         <!-- Potentiometer -->
         <div class="snippet-card" data-category="input">
           <h3>Potentiometer — Analog Read</h3>
