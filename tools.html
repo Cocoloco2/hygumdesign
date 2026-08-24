@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototyping Tools — Kristoffer Hygum</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="index.html">Portfolio</a>
+    <a href="snippets.html">Sensor Snippets</a>
+    <a href="tools.html" class="active">Tools</a>
+  </nav>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1>Kristoffer Hygum</h1>
+      <p>Digital designer and maker. Focused on interaction design and prototyping.</p>
+      <p>
+        Small web tools I've built at FABLAB RUC to speed up prototyping —
+        no software installs, just open in a browser and go.
+      </p>
+      <p>
+        Have an idea for a tool that would help? Let me know.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
+        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <section>
+        <div class="page-intro">
+          <h2>Prototyping Tools</h2>
+          <p>Browser-based tools for fast, hands-on fabrication. Everything here runs client-side — nothing to install.</p>
+        </div>
+
+        <a href="boxcraft.html" class="tool-card">
+          <div class="tool-icon">▢</div>
+          <div>
+            <h3>Boxcraft</h3>
+            <p>Generate laser-cuttable box designs with finger joints, custom dimensions, and dividers. Export-ready for the laser cutter.</p>
+          </div>
+          <div class="tool-arrow">→</div>
+        </a>
+
+        <div class="tool-card" style="opacity:0.5; cursor:default; pointer-events:none;">
+          <div class="tool-icon">＋</div>
+          <div>
+            <h3>More tools coming soon</h3>
+            <p>Additional fabrication and prototyping tools will be added here over time.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>© 2025 Kristoffer Hygum</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
+
+</body>
+</html>
