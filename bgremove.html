@@ -74,25 +74,37 @@
 
     .dropzone input { display: none; }
 
-    .sampled-swatch-row {
+    .seed-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 0.6rem;
-    }
-
-    .swatch {
-      width: 28px;
-      height: 28px;
+      background: #f7f7f5;
       border-radius: 6px;
-      border: 1px solid #ddd;
-      background: repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 10px 10px;
-      flex-shrink: 0;
+      padding: 0.5rem 0.7rem;
     }
 
-    #swatchLabel {
+    #seedCountLabel {
       font-size: 0.82rem;
-      color: #666;
+      color: #444;
     }
+
+    #seedCountLabel strong {
+      color: #111;
+    }
+
+    .link-btn {
+      border: none;
+      background: none;
+      color: #0077ff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .link-btn:hover { text-decoration: underline; }
+    .link-btn:disabled { color: #bbb; cursor: default; text-decoration: none; }
 
     .mode-row {
       display: flex;
@@ -185,10 +197,25 @@
       margin-bottom: 0.5rem;
     }
 
+    .canvas-stack {
+      position: relative;
+      max-width: 100%;
+      line-height: 0;
+    }
+
     #canvas {
       max-width: 100%;
       display: block;
       cursor: crosshair;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
     .canvas-hint {
@@ -220,7 +247,7 @@
 
         <div class="page-intro">
           <h2>Background Eraser</h2>
-          <p>Removes a solid-color background from a photo, entirely in your browser — nothing is uploaded anywhere. Works best on photos with an even, plain backdrop: a white sweep, a green screen, a flat wall. Busy or gradient backgrounds will need more manual touch-up.</p>
+          <p>Removes a background from a photo, entirely in your browser — nothing is uploaded anywhere. Click one or more spots in the background; the selection spreads outward and stops at edges, so it handles gradients and slightly textured backgrounds better than a flat color match.</p>
         </div>
 
         <div class="bg-tool-wrap">
@@ -235,34 +262,34 @@
             </div>
 
             <div class="bg-field">
-              <label>2. Sample the background color</label>
-              <div class="sampled-swatch-row">
-                <div class="swatch" id="swatch"></div>
-                <span id="swatchLabel">Upload a photo first</span>
+              <label>2. Pick the background</label>
+              <div class="seed-row">
+                <span id="seedCountLabel">Upload a photo first</span>
+                <button class="link-btn" id="clearSeedsBtn" disabled>Reset selection</button>
               </div>
-              <div class="field-desc">A starting color is picked automatically from the corners. Switch to Sample mode below and click the background to refine it.</div>
+              <div class="field-desc">Starts with the four corners as a guess. In "Add point" mode below, click anywhere in the background to add more seed points — useful if the background has a gradient or patchy texture.</div>
             </div>
 
             <div class="bg-field">
-              <label>Tolerance <span id="v-tolerance">40</span></label>
-              <input type="range" id="tolerance" min="0" max="150" value="40" disabled>
-              <div class="field-desc">How close a pixel's color must be to count as background. Raise it if patches remain; lower it if part of your subject disappears.</div>
+              <label>Tolerance <span id="v-tolerance">30</span></label>
+              <input type="range" id="tolerance" min="0" max="100" value="30" disabled>
+              <div class="field-desc">How different a pixel can be from its neighbor before the fill stops spreading. Raise it to bridge gaps in a noisy background; lower it if the fill starts leaking into your subject.</div>
             </div>
 
             <div class="bg-field">
-              <label>Edge softness <span id="v-feather">20</span></label>
-              <input type="range" id="feather" min="0" max="80" value="20" disabled>
-              <div class="field-desc">Softens the cutout edge so it doesn't look jagged.</div>
+              <label>Edge softness <span id="v-feather">4</span></label>
+              <input type="range" id="feather" min="0" max="20" value="4" disabled>
+              <div class="field-desc">Blurs the cutout edge by this many pixels so it doesn't look jagged.</div>
             </div>
 
             <div class="bg-field">
-              <label>3. Touch up (optional)</label>
+              <label>3. Refine</label>
               <div class="mode-row">
-                <button class="mode-btn active" data-mode="sample" disabled>Sample</button>
+                <button class="mode-btn active" data-mode="sample" disabled>Add point</button>
                 <button class="mode-btn" data-mode="erase" disabled>Erase</button>
                 <button class="mode-btn" data-mode="restore" disabled>Restore</button>
               </div>
-              <div class="field-desc" id="modeDesc">Click the image to sample the background color.</div>
+              <div class="field-desc" id="modeDesc">Click the background to add a seed point there.</div>
             </div>
 
             <div class="bg-field" id="brushField" style="display:none;">
@@ -271,7 +298,7 @@
             </div>
 
             <div class="btn-row">
-              <button id="undoBtn" class="tool-btn-secondary" disabled>Undo stroke</button>
+              <button id="undoBtn" class="tool-btn-secondary" disabled>Undo</button>
               <button id="resetBtn" class="tool-btn-secondary" disabled>Start over</button>
             </div>
 
@@ -284,9 +311,12 @@
                 <span class="ph-icon">🖼</span>
                 Your photo will appear here
               </div>
-              <canvas id="canvas" style="display:none;"></canvas>
+              <div class="canvas-stack" id="canvasStack" style="display:none;">
+                <canvas id="canvas"></canvas>
+                <canvas id="overlay"></canvas>
+              </div>
             </div>
-            <div class="canvas-hint" id="canvasHint" style="display:none;">Checkerboard = transparent</div>
+            <div class="canvas-hint" id="canvasHint" style="display:none;">Checkerboard = transparent · dots = seed points</div>
           </div>
         </div>
       </section>
@@ -298,13 +328,16 @@
   </div>
 
   <script>
-    const MAX_DIM = 1600;
+    const MAX_DIM = 1400;
 
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('fileInput');
     const dropzoneLabel = document.getElementById('dropzoneLabel');
+    const canvasStack = document.getElementById('canvasStack');
     const canvas = document.getElementById('canvas');
+    const overlay = document.getElementById('overlay');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const octx = overlay.getContext('2d');
     const emptyState = document.getElementById('emptyState');
     const canvasHint = document.getElementById('canvasHint');
 
@@ -312,8 +345,8 @@
     const featherInput = document.getElementById('feather');
     const vTolerance = document.getElementById('v-tolerance');
     const vFeather = document.getElementById('v-feather');
-    const swatch = document.getElementById('swatch');
-    const swatchLabel = document.getElementById('swatchLabel');
+    const seedCountLabel = document.getElementById('seedCountLabel');
+    const clearSeedsBtn = document.getElementById('clearSeedsBtn');
     const modeButtons = document.querySelectorAll('.mode-btn');
     const modeDesc = document.getElementById('modeDesc');
     const brushField = document.getElementById('brushField');
@@ -326,14 +359,14 @@
     let originalData = null;   // pristine ImageData, never mutated
     let workingData = null;    // ImageData we paint into the canvas
     let manualMask = null;     // Uint8Array: 0 = auto, 1 = forced erase, 2 = forced restore
+    let seeds = [];             // pixel indices (not *4) used as flood-fill starting points
     let pixelCount = 0;
-    let sampledColor = null;   // [r,g,b]
     let mode = 'sample';
     let isPainting = false;
-    let history = [];          // stack of manualMask snapshots for undo
+    let history = [];          // stack of {mask, seeds} snapshots for undo
 
     const modeDescriptions = {
-      sample: 'Click the image to sample the background color.',
+      sample: 'Click the background to add a seed point there.',
       erase: 'Drag over the image to manually erase leftover background.',
       restore: 'Drag over the image to bring back parts that got erased by mistake.'
     };
@@ -344,6 +377,7 @@
       modeButtons.forEach(b => b.disabled = !enabled);
       downloadBtn.disabled = !enabled;
       resetBtn.disabled = !enabled;
+      clearSeedsBtn.disabled = !enabled;
       undoBtn.disabled = !enabled || history.length === 0;
     }
 
@@ -368,6 +402,8 @@
       }
       canvas.width = w;
       canvas.height = h;
+      overlay.width = w;
+      overlay.height = h;
       ctx.drawImage(img, 0, 0, w, h);
 
       originalData = ctx.getImageData(0, 0, w, h);
@@ -377,67 +413,162 @@
       manualMask = new Uint8Array(pixelCount);
       history = [];
 
-      canvas.style.display = 'block';
+      canvasStack.style.display = 'block';
       emptyState.style.display = 'none';
       canvasHint.style.display = 'block';
       dropzoneLabel.textContent = 'Choose a different photo';
 
-      sampledColor = autoSampleCorners();
-      updateSwatch();
-      recomputeMask();
+      seeds = defaultCornerSeeds();
       setControlsEnabled(true);
+      recomputeAll();
     }
 
-    function autoSampleCorners() {
+    function defaultCornerSeeds() {
       const w = canvas.width, h = canvas.height;
-      const pts = [[2,2], [w-3,2], [2,h-3], [w-3,h-3]];
-      let r=0, g=0, b=0, n=0;
-      pts.forEach(([x,y]) => {
-        const i = (y*w+x)*4;
-        r += originalData.data[i];
-        g += originalData.data[i+1];
-        b += originalData.data[i+2];
-        n++;
+      const inset = 2;
+      return [
+        inset * w + inset,
+        inset * w + (w - 1 - inset),
+        (h - 1 - inset) * w + inset,
+        (h - 1 - inset) * w + (w - 1 - inset)
+      ];
+    }
+
+    // Multi-seed flood fill: a neighbor joins the fill if it's close enough
+    // to the pixel that's already in the fill next to it. This lets the
+    // selection walk gradients step by step instead of needing one global
+    // color match, and it naturally stops at sharp edges.
+    function floodFill(seedList, tol) {
+      const w = canvas.width, h = canvas.height;
+      const src = originalData.data;
+      const visited = new Uint8Array(pixelCount);
+      const queue = new Int32Array(pixelCount);
+      let qLen = 0;
+
+      seedList.forEach(p => {
+        if (!visited[p]) {
+          visited[p] = 1;
+          queue[qLen++] = p;
+        }
       });
-      return [Math.round(r/n), Math.round(g/n), Math.round(b/n)];
+
+      let qi = 0;
+      while (qi < qLen) {
+        const p = queue[qi++];
+        const x = p % w, y = (p / w) | 0;
+        const i = p * 4;
+        const cr = src[i], cg = src[i + 1], cb = src[i + 2];
+
+        if (x > 0) tryVisit(p - 1);
+        if (x < w - 1) tryVisit(p + 1);
+        if (y > 0) tryVisit(p - w);
+        if (y < h - 1) tryVisit(p + w);
+
+        function tryVisit(np) {
+          if (visited[np]) return;
+          const ni = np * 4;
+          const dr = src[ni] - cr, dg = src[ni + 1] - cg, db = src[ni + 2] - cb;
+          if (Math.sqrt(dr * dr + dg * dg + db * db) <= tol) {
+            visited[np] = 1;
+            queue[qLen++] = np;
+          }
+        }
+      }
+      return visited; // 1 = part of the background fill
     }
 
-    function updateSwatch() {
-      if (!sampledColor) return;
-      swatch.style.background = `rgb(${sampledColor[0]},${sampledColor[1]},${sampledColor[2]})`;
-      swatchLabel.textContent = `rgb(${sampledColor[0]}, ${sampledColor[1]}, ${sampledColor[2]})`;
+    // Fast O(n) box blur (used to soften the flood-fill edge)
+    function boxBlurPass(src, w, h, r, horizontal) {
+      const dst = new Float32Array(w * h);
+      if (horizontal) {
+        for (let y = 0; y < h; y++) {
+          const rowStart = y * w;
+          let sum = 0, count = 0;
+          for (let k = -r; k <= r; k++) {
+            if (k >= 0 && k < w) { sum += src[rowStart + k]; count++; }
+          }
+          dst[rowStart] = sum / count;
+          for (let x = 1; x < w; x++) {
+            const addX = x + r, remX = x - r - 1;
+            if (addX < w) { sum += src[rowStart + addX]; count++; }
+            if (remX >= 0) { sum -= src[rowStart + remX]; count--; }
+            dst[rowStart + x] = sum / count;
+          }
+        }
+      } else {
+        for (let x = 0; x < w; x++) {
+          let sum = 0, count = 0;
+          for (let k = -r; k <= r; k++) {
+            if (k >= 0 && k < h) { sum += src[k * w + x]; count++; }
+          }
+          dst[x] = sum / count;
+          for (let y = 1; y < h; y++) {
+            const addY = y + r, remY = y - r - 1;
+            if (addY < h) { sum += src[addY * w + x]; count++; }
+            if (remY >= 0) { sum -= src[remY * w + x]; count--; }
+            dst[y * w + x] = sum / count;
+          }
+        }
+      }
+      return dst;
     }
 
-    function recomputeMask() {
-      if (!sampledColor) return;
+    function boxBlur(alpha, w, h, r) {
+      if (r <= 0) return alpha;
+      return boxBlurPass(boxBlurPass(alpha, w, h, r, true), w, h, r, false);
+    }
+
+    function recomputeAll() {
+      if (!originalData) return;
+      const w = canvas.width, h = canvas.height;
       const tol = parseInt(toleranceInput.value, 10);
-      const feather = Math.max(1, parseInt(featherInput.value, 10));
+      const featherR = parseInt(featherInput.value, 10);
+
+      let alpha;
+      if (seeds.length === 0) {
+        alpha = new Float32Array(pixelCount).fill(255);
+      } else {
+        const visited = floodFill(seeds, tol);
+        alpha = new Float32Array(pixelCount);
+        for (let p = 0; p < pixelCount; p++) alpha[p] = visited[p] ? 0 : 255;
+        if (featherR > 0) alpha = boxBlur(alpha, w, h, featherR);
+      }
+
       const src = originalData.data;
       const dst = workingData.data;
-      const [sr, sg, sb] = sampledColor;
-
       for (let p = 0; p < pixelCount; p++) {
-        const i = p * 4;
-        const dr = src[i] - sr;
-        const dg = src[i+1] - sg;
-        const db = src[i+2] - sb;
-        const dist = Math.sqrt(dr*dr + dg*dg + db*db);
-
-        let alpha;
-        if (dist <= tol) alpha = 0;
-        else if (dist <= tol + feather) alpha = Math.round(255 * (dist - tol) / feather);
-        else alpha = 255;
-
+        let a = alpha[p];
         const m = manualMask[p];
-        if (m === 1) alpha = 0;
-        else if (m === 2) alpha = 255;
-
-        dst[i] = src[i];
-        dst[i+1] = src[i+1];
-        dst[i+2] = src[i+2];
-        dst[i+3] = alpha;
+        if (m === 1) a = 0;
+        else if (m === 2) a = 255;
+        const i = p * 4;
+        dst[i] = src[i]; dst[i + 1] = src[i + 1]; dst[i + 2] = src[i + 2]; dst[i + 3] = Math.round(a);
       }
       ctx.putImageData(workingData, 0, 0);
+
+      seedCountLabel.innerHTML = `<strong>${seeds.length}</strong> background point${seeds.length === 1 ? '' : 's'} selected`;
+      drawSeedMarkers();
+    }
+
+    function drawSeedMarkers() {
+      const w = canvas.width, h = canvas.height;
+      octx.clearRect(0, 0, w, h);
+      octx.lineWidth = Math.max(1, w / 300);
+      seeds.forEach(p => {
+        const x = p % w, y = (p / w) | 0;
+        octx.beginPath();
+        octx.arc(x, y, Math.max(3, w / 150), 0, Math.PI * 2);
+        octx.fillStyle = 'rgba(0, 119, 255, 0.85)';
+        octx.fill();
+        octx.strokeStyle = '#fff';
+        octx.stroke();
+      });
+    }
+
+    function pushHistory() {
+      history.push({ mask: manualMask.slice(), seeds: seeds.slice() });
+      if (history.length > 25) history.shift();
+      undoBtn.disabled = false;
     }
 
     function getPixelPos(e) {
@@ -463,9 +594,7 @@
       for (let yy = minY; yy <= maxY; yy++) {
         for (let xx = minX; xx <= maxX; xx++) {
           const dx = xx - x, dy = yy - y;
-          if (dx*dx + dy*dy <= rr) {
-            manualMask[yy * w + xx] = value;
-          }
+          if (dx * dx + dy * dy <= rr) manualMask[yy * w + xx] = value;
         }
       }
     }
@@ -487,11 +616,11 @@
 
     toleranceInput.addEventListener('input', () => {
       vTolerance.textContent = toleranceInput.value;
-      recomputeMask();
+      recomputeAll();
     });
     featherInput.addEventListener('input', () => {
       vFeather.textContent = featherInput.value;
-      recomputeMask();
+      recomputeAll();
     });
     brushInput.addEventListener('input', () => {
       vBrush.textContent = brushInput.value;
@@ -510,54 +639,57 @@
     canvas.addEventListener('mousedown', (e) => {
       if (!originalData) return;
       const { x, y } = getPixelPos(e);
+      const p = y * canvas.width + x;
 
       if (mode === 'sample') {
-        const i = (y * canvas.width + x) * 4;
-        sampledColor = [originalData.data[i], originalData.data[i+1], originalData.data[i+2]];
-        manualMask.fill(0);
-        history = [];
-        updateSwatch();
-        recomputeMask();
-        undoBtn.disabled = true;
+        pushHistory();
+        seeds.push(p);
+        recomputeAll();
         return;
       }
 
-      history.push(manualMask.slice());
-      if (history.length > 20) history.shift();
-      undoBtn.disabled = false;
-
+      pushHistory();
       isPainting = true;
       paintBrush(x, y, mode === 'erase' ? 1 : 2);
-      recomputeMask();
+      recomputeAll();
     });
 
     canvas.addEventListener('mousemove', (e) => {
       if (!isPainting) return;
       const { x, y } = getPixelPos(e);
       paintBrush(x, y, mode === 'erase' ? 1 : 2);
-      recomputeMask();
+      recomputeAll();
     });
 
     window.addEventListener('mouseup', () => { isPainting = false; });
 
     undoBtn.addEventListener('click', () => {
       if (history.length === 0) return;
-      manualMask = history.pop();
+      const last = history.pop();
+      manualMask = last.mask;
+      seeds = last.seeds;
       undoBtn.disabled = history.length === 0;
-      recomputeMask();
+      recomputeAll();
+    });
+
+    clearSeedsBtn.addEventListener('click', () => {
+      if (!originalData) return;
+      pushHistory();
+      seeds = defaultCornerSeeds();
+      manualMask.fill(0);
+      recomputeAll();
     });
 
     resetBtn.addEventListener('click', () => {
-      canvas.style.display = 'none';
+      canvasStack.style.display = 'none';
       emptyState.style.display = 'block';
       canvasHint.style.display = 'none';
       dropzoneLabel.textContent = 'Drop an image here, or click to choose one';
-      swatchLabel.textContent = 'Upload a photo first';
-      swatch.style.background = 'repeating-conic-gradient(#eee 0% 25%, #fff 0% 50%) 50% / 10px 10px';
+      seedCountLabel.textContent = 'Upload a photo first';
       originalData = null;
       workingData = null;
       manualMask = null;
-      sampledColor = null;
+      seeds = [];
       history = [];
       fileInput.value = '';
       setControlsEnabled(false);
