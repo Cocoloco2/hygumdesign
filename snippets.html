@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensor Snippets — Kristoffer Hygum</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="index.html">Portfolio</a>
+    <a href="snippets.html" class="active">Sensor Snippets</a>
+    <a href="tools.html">Tools</a>
+  </nav>
+
+  <div class="container solo">
+    <!-- Main Content -->
+    <main class="content solo">
+      <section>
+        <div class="page-intro">
+          <h2>Sensor Snippets</h2>
+          <p>Copy-paste Arduino/ESP32 code for common sensors used in rapid prototyping. Each snippet is a minimal working example — wire it up, upload it, and build from there. Drop a photo or GIF into <code>images/snippets/</code> with the filename shown under each snippet to show what it looks like in action.</p>
+        </div>
+
+        <div class="filter-row">
+          <span class="filter-tag active" data-filter="all">All</span>
+          <span class="filter-tag" data-filter="distance">Distance</span>
+          <span class="filter-tag" data-filter="motion">Motion</span>
+          <span class="filter-tag" data-filter="environment">Environment</span>
+          <span class="filter-tag" data-filter="input">Input</span>
+          <span class="filter-tag" data-filter="output">Output</span>
+          <span class="filter-tag" data-filter="led">NeoPixel / LED</span>
+        </div>
+
+        <!-- HC-SR04 Ultrasonic -->
+        <div class="snippet-card" data-category="distance">
+          <h3>HC-SR04 — Ultrasonic Distance Sensor</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Distance</span></div>
+          <p class="desc">Reads distance in centimeters using the trigger/echo pins. Great for proximity-based interaction.</p>
+          <div class="snippet-media">
+            <img src="images/HCSR04.jpeg" alt="HC-SR04 demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/HCSR04.jpeg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+  float distanceCm = duration * 0.0343 / 2;
+
+  Serial.print("Distance: ");
+  Serial.print(distanceCm);
+  Serial.println(" cm");
+
+  delay(200);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- PIR Motion -->
+        <div class="snippet-card" data-category="motion">
+          <h3>PIR Motion Sensor (HC-SR501)</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Motion</span></div>
+          <p class="desc">Digital HIGH/LOW output when motion is detected. Good starting point for presence-triggered installations.</p>
+          <div class="snippet-media">
+            <img src="images/Pir-sensor.jpg" alt="PIR motion sensor">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/Pir-sensor.jpg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>const int pirPin = 2;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pirPin, INPUT);
+}
+
+void loop() {
+  int motion = digitalRead(pirPin);
+
+  if (motion == HIGH) {
+    Serial.println("Motion detected!");
+  } else {
+    Serial.println("No motion");
+  }
+
+  delay(150);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- DHT22 -->
+        <div class="snippet-card" data-category="environment">
+          <h3>DHT22 — Temperature &amp; Humidity</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Environment</span></div>
+          <p class="desc">Requires the "DHT sensor library" by Adafruit (install via Library Manager). Reads both temperature (°C) and relative humidity.</p>
+          <div class="snippet-media">
+            <img src="images/DHT-22-sensor.jpg" alt="DHT22 demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/DHT-22-sensor.jpg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;DHT.h&gt;
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float humidity = dht.readHumidity();
+  float tempC = dht.readTemperature();
+
+  if (isnan(humidity) || isnan(tempC)) {
+    Serial.println("Failed to read from DHT sensor");
+    return;
+  }
+
+  Serial.print("Temp: ");
+  Serial.print(tempC);
+  Serial.print(" C  Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  delay(2000);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Soil Moisture Sensor -->
+        <div class="snippet-card" data-category="environment">
+          <h3>Soil Moisture Sensor — Two-Prong (YL-69 / FC-28)</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Environment</span></div>
+          <p class="desc">The cheap two-fork sensor you stick straight into soil. Reads a raw analog value that goes down as the soil gets wetter, and converts it to a 0–100% reading. Wire the AO pin to an analog pin, VCC to 5V, GND to GND.</p>
+          <div class="snippet-media">
+            <img src="images/Soil-moisture-sensor.jpg" alt="Soil moisture sensor demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/Soil-moisture-sensor.jpg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>const int soilPin = A0;
+
+// Calibrate these for your own sensor + soil:
+// dip the probe in dry air and note the value, then in water and note that one.
+const int dryValue = 850;  // raw reading in dry soil / air
+const int wetValue = 350;  // raw reading in water / fully wet soil
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(soilPin);
+  int moisturePercent = map(raw, dryValue, wetValue, 0, 100);
+  moisturePercent = constrain(moisturePercent, 0, 100);
+
+  Serial.print("Raw: ");
+  Serial.print(raw);
+  Serial.print("  Moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println(" %");
+
+  delay(500);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Potentiometer -->
+        <div class="snippet-card" data-category="input">
+          <h3>Potentiometer — Analog Read</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Input</span></div>
+          <p class="desc">Reads a 0–1023 value and maps it to a usable range. Useful for dials, sliders, and manual control inputs.</p>
+          <div class="snippet-media">
+            <img src="images/Potentiometer.jpg" alt="Potentiometer demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/Potentiometer.jpg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>const int potPin = A0;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  int raw = analogRead(potPin);
+  int mapped = map(raw, 0, 1023, 0, 255);
+
+  Serial.print("Raw: ");
+  Serial.print(raw);
+  Serial.print("  Mapped: ");
+  Serial.println(mapped);
+
+  delay(100);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- Servo -->
+        <div class="snippet-card" data-category="output">
+          <h3>Servo Motor — Sweep</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>Output</span></div>
+          <p class="desc">Basic servo sweep using the built-in Servo library. A good base for kinetic mechanisms.</p>
+          <div class="snippet-media">
+            <img src="images/servo.jpg" alt="Servo sweep demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/servo.jpg</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Servo.h&gt;
+
+Servo myServo;
+
+void setup() {
+  myServo.attach(9);
+}
+
+void loop() {
+  for (int pos = 0; pos <= 180; pos++) {
+    myServo.write(pos);
+    delay(10);
+  }
+  for (int pos = 180; pos >= 0; pos--) {
+    myServo.write(pos);
+    delay(10);
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- ESP32 WiFi -->
+        <div class="snippet-card" data-category="output">
+          <h3>ESP32 — Connect to WiFi</h3>
+          <div class="snippet-meta"><span>ESP32</span><span>Output</span></div>
+          <p class="desc">Minimal boilerplate to get an ESP32 on your network — the first step for anything web-connected.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/esp32-wifi.gif" alt="ESP32 WiFi demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/esp32-wifi.gif</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;WiFi.h&gt;
+
+const char* ssid = "your-network";
+const char* password = "your-password";
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.print("Connected. IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: for loop color change -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Cycle Colors with a For Loop</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). A small helper function fills every pixel with one color at a time — call it with different red/green/blue values to cycle colors, no arrays or fancy types needed.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-forloop.gif" alt="NeoPixel color cycle demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-forloop.gif</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show(); // turn all pixels off
+}
+
+void loop() {
+  setAllPixels(255, 0, 0);   // red
+  delay(500);
+
+  setAllPixels(0, 255, 0);   // green
+  delay(500);
+
+  setAllPixels(0, 0, 255);   // blue
+  delay(500);
+
+  setAllPixels(255, 255, 0); // yellow
+  delay(500);
+}
+
+// Sets every pixel on the strip to the same color
+void setAllPixels(int red, int green, int blue) {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.setPixelColor(i, strip.Color(red, green, blue));
+  }
+  strip.show();
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: hardcoded per-pixel colors -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Hardcoded Per-Pixel Colors</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">Sets each LED to its own fixed color, one line per pixel. Useful when you want a specific, unchanging pattern rather than something generated in code.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-hardcoded.gif" alt="NeoPixel hardcoded colors demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-hardcoded.gif</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+
+  strip.setPixelColor(0, strip.Color(255, 0, 0));
+  strip.setPixelColor(1, strip.Color(0, 255, 0));
+  strip.setPixelColor(2, strip.Color(0, 0, 255));
+  strip.setPixelColor(3, strip.Color(255, 255, 0));
+  strip.setPixelColor(4, strip.Color(255, 0, 255));
+  strip.setPixelColor(5, strip.Color(0, 255, 255));
+  strip.setPixelColor(6, strip.Color(255, 255, 255));
+  strip.setPixelColor(7, strip.Color(255, 128, 0));
+
+  strip.show();
+}
+
+void loop() {
+  // colors are set once in setup() and just stay lit
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NeoPixel: chase animation -->
+        <div class="snippet-card" data-category="led">
+          <h3>NeoPixel — Chase Animation</h3>
+          <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
+          <p class="desc">A single lit pixel runs down the strip and loops back to the start — the classic "Cylon"/chase effect. Swap the color or add a second pixel offset in the loop for variations.</p>
+          <div class="snippet-media">
+            <img src="images/snippets/neopixel-chase.gif" alt="NeoPixel chase animation demo">
+            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-chase.gif</code></div>
+          </div>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button>
+            <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
+
+#define PIN 6
+#define NUMPIXELS 8
+
+Adafruit_NeoPixel strip(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  strip.begin();
+  strip.show();
+}
+
+void loop() {
+  for (int i = 0; i < NUMPIXELS; i++) {
+    strip.clear();
+    strip.setPixelColor(i, strip.Color(0, 150, 255));
+    strip.show();
+    delay(80);
+  }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>© 2025 Kristoffer Hygum</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Show a placeholder if no image/gif has been added yet for a snippet
+    document.querySelectorAll('.snippet-media img').forEach(img => {
+      img.addEventListener('error', () => {
+        img.style.display = 'none';
+        img.closest('.snippet-media').classList.add('empty');
+      });
+    });
+
+    // Copy-to-clipboard
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.parentElement.querySelector('code').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+    });
+
+    // Filtering
+    const tags = document.querySelectorAll('.filter-tag');
+    const cards = document.querySelectorAll('.snippet-card');
+
+    tags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        tags.forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+        const filter = tag.dataset.filter;
+
+        cards.forEach(card => {
+          if (filter === 'all' || card.dataset.category === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Fade in on load
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
+
+</body>
+</html>
