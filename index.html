@@ -1,176 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kristoffer Hygum — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
-
-</head>
-
-<body>
-  <div class="container">
-    <!-- === LEFT COLUMN: About Sidebar === -->
-    <aside class="sidebar">
-      <h1>About Me:</h1>
-      <p>
-        I’m Kristoffer Hygum, a digital designer and maker currently pursuing a master’s degree in Digital Transformation at Roskilde University.
-      </p>
-      <p>
-        My work combines design, technology, and rapid prototyping to turn ideas into playful, tangible experiences.
-      </p>
-      <p>
-        I have a hands-on approach to design, often working with laser cutting, 3D printing, and fabrication tools to prototype and test ideas quickly.
-      </p>
-      <p>
-        Alongside my studies, I work as a technological consultant at FABLAB RUC and as a teaching assistant, helping others bring creative and technical projects to life.
-      </p>
-      <!-- === LEFT COLUMN: Experience === -->
-  <h3 class="experience">Experience & Education</h3>
-
-  <div class="exp-item">
-    <strong>2024 – Present</strong>
-    <p>Master’s in Digital Transformation</p>
-    <em>Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2023 – Present</strong>
-    <p>Teaching Assistant For: </p>
-    <p>Design Methods And technology</p>
-    <p>Design In The Field</p>
-    <p>Interactive Degital Systems</p>
-    <em>Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2022 – Present</strong>
-    <p>Technological Consultant Student Helper</p>
-    <em>FABLAB Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2021 – 2024</strong>
-    <p>Bachelor’s in Humanistic-Technological Bachelor</p>
-    <em>Roskilde University</em>
-  </div>
-
-
-
-      <div class="contact-links">
-        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
-        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
-      </div>
-    </aside>
-
-    <!-- === RIGHT COLUMN: Main Content === -->
-    <main class="content">
-      <!-- Projects Section -->
-      <section>
-        <h2 class="section-intro">
-          A selection of recent projects exploring interaction, materiality, and digital design.
-        </h2>
-
-        <div class="projects">
-          <div class="project">
-            <h3>Parametric Shelf System</h3>
-            <p>An adaptive shelving concept exploring modular design principles.</p>
-            <img src="images/ParametricShelf.png" alt="Parametric Shelf" class="project-image">
-            <a href="parametricshelf.html" class="project-button">View Project</a>
-          </div>
-
-          <div class="project">
-            <h3>Jellyfish on Roskilde Festival</h3>
-            <p>An interactive light installation reacting to human touch.</p>
-            <img src="images/Roskilde2025.jpg" alt="Jellyfish on Roskilde Festival" class="project-image">
-            <a href="jellyfish.html" class="project-button">View Project</a>
-          </div>
-
-          <div class="project">
-            <h3>Feel You Pictures</h3>
-            <p>A tactile photography experiment blending visual media with sensory interaction.</p>
-            <img src="images/3DFrame.jpg" alt="Feel You Pictures" class="project-image">
-            <a href="3dframe.html" class="project-button">View Project</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer>
-        <p>© 2025 Kristoffer Hygum</p>
-      </footer>
-    </main>
-  </div>
-
- <!-- Project fade-in animation + page transition -->
-<script>
-  // === Staggered fade-in for projects ===
-  const projects = document.querySelectorAll('.project');
-
-  // === Intersection Observer for scroll fade ===
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        entry.target.style.transitionDelay = `${index * 150}ms`;
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-        entry.target.style.transitionDelay = '0ms';
-      }
-    });
-  }, { threshold: 0.2 });
-
-  projects.forEach(el => observer.observe(el));
-
-  // === Make the first two visible immediately on page load (but still observed) ===
-  window.addEventListener("load", () => {
-    projects.forEach((project, i) => {
-      if (i < 2) {
-        project.classList.add('visible');
-        project.style.transitionDelay = `${i * 150}ms`;
-      }
-    });
-  });
-
-
-  // === Smooth page transitions ===
-
-  // Fix for white screen when using back/forward navigation
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      document.body.classList.add('loaded');
-    }
-  });
-
-  // Fade in when the page loads
-  window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-  });
-
-  // Fade out before navigating away
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', e => {
-      const href = link.getAttribute('href');
-      if (
-        href &&
-        !href.startsWith('#') &&
-        !href.startsWith('mailto:') &&
-        !href.startsWith('http')
-      ) {
-        e.preventDefault();
-        document.body.classList.remove('loaded');
-        setTimeout(() => (window.location = href), 300);
-      }
-    });
-  });
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Kristoffer Hygum, digital designer and maker exploring interaction design, digital transformation and tangible experiences.">
+<title>Kristoffer Hygum | Digital designer & maker</title>
+<link rel="icon" href="images/favicon.png">
+<link rel="stylesheet" href="style.css">
+<script src="sensors.js" defer></script>
+<script src="lessons.js" defer></script>
+<script src="script.js" defer>
 </script>
-
-
-
-
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header>
+<a class="brand" href="index.html">KH<span>Kristoffer Hygum</span>
+</a>
+<nav aria-label="Main navigation">
+<a href="#work">Work</a>
+<a href="#lab">Playground</a>
+<a href="#about">About</a>
+<a href="https://www.linkedin.com/in/kristoffer-n-56207aba/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+</nav>
+</header>
+<main id="main" class="home">
+<section class="hero">
+<p class="eyebrow">● Digital designer & maker · Roskilde, Denmark</p>
+<h1>Making digital<br>ideas <em>tangible.</em>
+</h1>
+<div class="hero-bottom">
+<p>A collection of my projects, experiments, and things I’ve learned about design and technology. Explore the work, play with the code, and try making something yourself.</p>
+<a class="round" href="#work" aria-label="Explore selected work">↓</a>
+</div>
+<div class="disciplines">
+<span>↗ Interaction design</span>
+<span>↗ Digital transformation</span>
+<span>↗ Creative technology</span>
+</div>
+</section>
+<section id="work" class="section">
+<div class="heading">
+<div>
+<p class="eyebrow">01 / Selected work</p>
+<h2>From screen to physical world.</h2>
+</div>
+<p>Experiments in light, material, and interaction.</p>
+</div>
+<div class="projects">
+<a class="project featured" href="jellyfish.html">
+<div class="image-wrap">
+<img src="images/Roskilde2025.jpg" alt="Jellyfish installation at Roskilde Festival">
+<span aria-hidden="true">↗</span>
+</div>
+<div class="meta">Interaction design · Installation <span>01</span>
+</div>
+<h3>Jellyfish at Roskilde Festival</h3>
+<p>A shared sensory experience, sparked by human touch.</p>
+</a>
+<a class="project" href="parametricshelf.html">
+<div class="image-wrap">
+<img src="images/ParametricShelf.png" alt="Sculpted parametric shelf system" loading="lazy">
+<span aria-hidden="true">↗</span>
+</div>
+<div class="meta">Parametric design · Fabrication <span>02</span>
+</div>
+<h3>Parametric Shelf System</h3>
+<p>One system. Many possible forms.</p>
+</a>
+<a class="project" href="3dframe.html">
+<div class="image-wrap">
+<img src="images/3DFrame.jpg" alt="Tactile photography frame prototype" loading="lazy">
+<span aria-hidden="true">↗</span>
+</div>
+<div class="meta">Tangible interaction · Prototyping <span>03</span>
+</div>
+<h3>Feel Your Pictures</h3>
+<p>Exploring photography beyond the visual.</p>
+</a>
+</div>
+</section>
+<section id="lab" class="section">
+<div class="heading">
+<div>
+<p class="eyebrow">02 / Learn by making</p>
+<h2>A little less looking.<br>A little more trying.</h2>
+</div>
+<p>Small tools for learning code: change a value, see what happens, and understand why. Start with a strip of NeoPixels.</p>
+</div>
+<noscript>
+<p>Enable JavaScript to try the experiments. All project stories remain available above.</p>
+</noscript>
+<div class="demo-buttons" role="group" aria-label="Choose an experiment">
+<button data-demo="led" aria-pressed="true">01 NeoPixel basics</button>
+<button data-demo="touch" aria-pressed="false">02 Touch & response</button>
+<button data-demo="shelf" aria-pressed="false">03 Parametric thinking</button>
+<button data-demo="button" aria-pressed="false">04 Push a button</button>
+<button data-demo="pot" aria-pressed="false">05 Turn a potentiometer</button>
+<button data-demo="chase" aria-pressed="false">06 LED chase</button>
+<button data-demo="distance" aria-pressed="false">07 Distance</button>
+<button data-demo="temperature" aria-pressed="false">08 Temperature</button>
+<button data-demo="rain" aria-pressed="false">09 Rain</button>
+<button data-demo="light" aria-pressed="false">10 Light</button>
+<button data-demo="motion" aria-pressed="false">11 Motion</button>
+</div>
+<div class="demo" id="demo-led">
+<div class="visual led-visual">
+<span class="visual-label">COLOUR → PIXEL → SHOW()</span>
+<div><div id="led-strip" class="led-strip" role="group" aria-label="Choose a pixel from the eight LED strip"></div><p class="small">Pixel numbers start at 0. Select one to control it.</p></div>
+<p id="led-status" role="status"></p>
+<figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-led.svg" alt="Illustration of RGB NeoPixel strip" width="420" height="265" loading="lazy"><figcaption><h4>RGB NeoPixel strip</h4><p>Each pixel contains a red, green and blue LED plus its own controller. One data connection addresses the whole strip.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div>
+<div class="demo-copy">
+<p class="eyebrow">Arduino · NeoPixel basics</p><h3>Your first line of light.</h3>
+<p>Choose a colour and a pixel, then press <strong>Send to LEDs</strong>. Like a real NeoPixel strip, changing the colour in code does nothing until you call <code>show()</code>.</p>
+<label for="led-color">Colour <output id="led-rgb"></output></label><input type="color" id="led-color" value="#d9f46b">
+<label for="led-brightness">Brightness <output id="led-brightness-value">20%</output></label><input type="range" id="led-brightness" min="0" max="100" value="20">
+<label for="led-target">Apply colour to</label><select id="led-target"><option value="one">Selected pixel</option><option value="all">All 8 pixels</option></select>
+<div class="led-actions"><button id="led-send" class="project-button">Send to LEDs · show()</button><button id="led-reset" class="secondary-button">Reset</button></div>
+<p id="led-pending" role="status">Ready to send.</p>
+<pre><code id="led-code"></code></pre>
+<button id="led-copy" class="secondary-button">Copy Arduino sketch</button><span id="led-copy-status" class="small" role="status"></span>
+<details><summary>What does each part do?</summary><ul><li><code>begin()</code> prepares the strip.</li><li><code>clear()</code> clears the stored colours.</li><li><code>setPixelColor()</code> stores a pixel’s red, green and blue values (0–255).</li><li>A <code>for</code> loop repeats the instruction for all eight pixels.</li><li><code>show()</code> sends the stored colours to the LEDs.</li></ul><p>This example scales RGB values for brightness. The full sketch sets the strip once in <code>setup()</code>; <code>loop()</code> can stay empty.</p></details>
+<details><summary>Try it on real hardware</summary><p>Example setup: an Arduino Uno and eight 5 V RGB NeoPixels (GRB, 800 kHz), with data on pin 6. Install <strong>Adafruit NeoPixel</strong> using the Arduino Library Manager, then copy the sketch. Adjust the pin, pixel count and pixel type to match your hardware.</p><p>Connect data to the strip’s DIN, share ground with the board, and use a suitable 5 V supply. Follow Adafruit’s wiring and power guidance, including a 300–500 Ω data resistor and a 500–1000 µF capacitor across the strip’s power input. Disconnect power before changing wiring.</p><a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/basic-connections" target="_blank" rel="noopener noreferrer">Wiring guide ↗</a> · <a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use" target="_blank" rel="noopener noreferrer">Library explanation ↗</a></details>
+<p class="small">Browser simulation, not a connection to physical LEDs. Screen colour and brightness are approximate.</p>
+</div></div>
+<div class="demo" id="demo-button" hidden><div class="visual lesson-visual"><span class="visual-label">DIGITAL INPUT → TRUE / FALSE</span><button id="input-button" class="hardware-button">Press and hold</button><div id="button-light" class="lesson-light" role="img" aria-label="Built-in LED off"></div><p id="button-status" role="status">Released · pin 2 reads HIGH · LED off</p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-button.svg" alt="Illustration of Momentary pushbutton" width="420" height="265" loading="lazy"><figcaption><h4>Momentary pushbutton</h4><p>A tactile switch closes a connection while held. Use a pair of contacts that connect only when pressed.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Digital input</p><h3>One button. Two states.</h3><p>Hold the button with your mouse, touch, or the Space key. The LED stays on while you press, then turns off when you release.</p><details open><summary>Wire it and understand it</summary><p>Connect a pushbutton between <strong>pin 2 and GND</strong>. Use contacts that connect only when pressed. This sketch uses the Uno’s built-in LED, so no external LED is needed.</p><p><code>INPUT_PULLUP</code> keeps the pin HIGH when released. Pressing connects it to ground, so <code>LOW</code> means pressed. This is a held-state example; counting presses or toggling needs debouncing.</p><a href="https://docs.arduino.cc/tutorials/generic/digital-input-pullup/" target="_blank" rel="noopener noreferrer">Arduino input pull-up guide ↗</a></details><pre><code id="button-code"></code></pre><button class="secondary-button" data-copy-lesson="button">Copy Arduino sketch</button><p class="small" id="button-copy-status" role="status"></p><p class="small">Browser simulation. The sketch targets an Arduino Uno; no hardware is connected to this page.</p></div></div>
+<div class="demo" id="demo-pot" hidden><div class="visual lesson-visual"><span class="visual-label">ANALOG INPUT → PWM OUTPUT</span><div id="pot-dial" class="pot-dial" aria-hidden="true"><span></span></div><div id="pot-light" class="lesson-light" role="img" aria-label="LED brightness preview"></div><p id="pot-status" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-pot.svg" alt="Illustration of 10 kΩ rotary potentiometer" width="420" height="265" loading="lazy"><figcaption><h4>10 kΩ rotary potentiometer</h4><p>Turning the shaft moves a wiper across a resistive track. The centre terminal supplies the changing voltage.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Analog input</p><h3>Read a dial. Dim a light.</h3><p>A potentiometer gives you a range of values. Move the slider to see an analog reading become an LED brightness level.</p><label for="pot-value">Potentiometer reading <output id="pot-value-output">512</output></label><input id="pot-value" type="range" min="0" max="1023" value="512"><p id="pot-mapping"></p><details><summary>Wire it and understand it</summary><p>For a 10 kΩ potentiometer on an Arduino Uno, connect the outer terminals to <strong>5 V and GND</strong>, and the centre terminal (wiper) to <strong>A0</strong>. Connect <strong>pin 9 → 220 Ω resistor → LED anode</strong>, and the LED cathode to GND.</p><p><code>analogRead()</code> returns 0–1023 on this board. <code>map()</code> scales it to 0–255 for <code>analogWrite()</code>, which controls PWM on pin 9. This is a regular LED, not a NeoPixel. Other boards can use different voltages and resolutions.</p><a href="https://docs.arduino.cc/built-in-examples/analog/AnalogInOutSerial/" target="_blank" rel="noopener noreferrer">Arduino analog input/output guide ↗</a></details><pre><code id="pot-code"></code></pre><button class="secondary-button" data-copy-lesson="pot">Copy Arduino sketch</button><p class="small" id="pot-copy-status" role="status"></p><p class="small">Browser simulation. The sketch targets an Arduino Uno; no hardware is connected to this page.</p></div></div>
+<div class="demo" id="demo-chase" hidden><div class="visual lesson-visual"><span class="visual-label">CLEAR → LIGHT ONE → ADVANCE</span><div id="chase-strip" class="led-strip chase-strip" role="img" aria-label="LED chase preview"></div><p id="chase-status">Paused · pixel 0 lit</p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-chase.svg" alt="Illustration of RGB NeoPixel strip" width="420" height="265" loading="lazy"><figcaption><h4>RGB NeoPixel strip</h4><p>The same strip as the basics lesson. The chase moves the active pixel along the strip, one address at a time.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Loops & timing</p><h3>Make the light move.</h3><p>A chase lights one pixel at a time. Run it, pause it, or step through each frame to follow the position in the code.</p><label for="chase-speed">Time per step <output id="chase-speed-output">250 ms</output></label><input id="chase-speed" type="range" min="80" max="1000" step="10" value="250"><label for="chase-color">Chase colour</label><input id="chase-color" type="color" value="#d9f46b"><div class="led-actions"><button id="chase-play" class="project-button" aria-pressed="false">Play chase</button><button id="chase-step" class="secondary-button">Next pixel</button><button id="chase-reset" class="secondary-button">Reset</button></div><p class="small">Starts paused. Switching tabs pauses the animation.</p><details><summary>Wire it and understand it</summary><p>Use the same eight RGB NeoPixels and pin 6 setup as <a href="?demo=led#lab">NeoPixel basics</a>, including its power and wiring guidance. Install the Adafruit NeoPixel library.</p><p><code>millis()</code> checks elapsed time without blocking the loop. <code>clear()</code> removes the previous pixel; <code>show()</code> sends the new frame. <code>(position + 1) % PIXEL_COUNT</code> wraps pixel 7 back to 0. The RGB values are scaled to 20% brightness.</p><a href="https://learn.adafruit.com/adafruit-neopixel-uberguide/arduino-library-use" target="_blank" rel="noopener noreferrer">NeoPixel library guide ↗</a></details><pre><code id="chase-code"></code></pre><button class="secondary-button" data-copy-lesson="chase">Copy Arduino sketch</button><p class="small" id="chase-copy-status" role="status"></p><p class="small">Browser simulation. The sketch targets an Arduino Uno; no hardware is connected to this page.</p></div></div>
+<div class="demo" id="demo-distance" hidden><div class="visual lesson-visual"><span class="visual-label">HC-SR04 · Ultrasonic</span><div id="distance-scene" class="sensor-scene distance-scene" aria-hidden="true"><span class="sensor-object"></span><span class="sensor-symbol">◉ ◉</span></div><p id="distance-reading" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-distance.svg" alt="Illustration of HC-SR04 ultrasonic module" width="420" height="265" loading="lazy"><figcaption><h4>HC-SR04 ultrasonic module</h4><p>One transducer sends a sound pulse; the other receives the echo. The time between them gives the distance.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Sensor playground · Distance</p><h3>Move an object. Read the distance.</h3><p>Move your mouse across the scene, or drag on touch. The object’s horizontal position controls the simulated distance. The slider works with a keyboard too.</p><label for="distance-value">Distance (cm) <output id="distance-output">60</output></label><input type="range" id="distance-value" min="2" max="200" value="60"><label class="sensor-checkbox"><input id="distance-timeout" type="checkbox"> Simulate no echo</label><details><summary>Wiring & what the reading means</summary><p>Connect VCC to 5 V, GND to GND, TRIG to pin 7, and ECHO to pin 8 on an Arduino Uno. The echo is 5 V; use level shifting for a 3.3 V board. A timeout means no echo, not zero distance.</p><p>Run this sketch on its own. Open Serial Monitor at 9600 baud to see the readings.</p><a href="https://projecthub.arduino.cc/shmuel_rubin/how-does-an-ultrasonic-sensor-really-work-e66c78" target="_blank" rel="noopener noreferrer">Read the reference ↗</a></details><pre><code id="distance-code"></code></pre><button class="secondary-button" data-copy-lesson="distance">Copy Arduino sketch</button><p id="distance-copy-status" class="small" role="status"></p><p class="small">Illustrative browser simulation for an Arduino Uno, not a live sensor. Real readings vary with hardware and calibration.</p></div></div>
+<div class="demo" id="demo-temperature" hidden><div class="visual lesson-visual"><span class="visual-label">TMP36 · Analog</span><div id="temperature-scene" class="sensor-scene temperature-scene" aria-hidden="true"><span class="sensor-object"></span><span class="sensor-symbol">°C</span></div><p id="temperature-reading" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-temperature.svg" alt="Illustration of TMP36 temperature sensor" width="420" height="265" loading="lazy"><figcaption><h4>TMP36 temperature sensor</h4><p>This small three-lead package outputs a voltage that changes with temperature. Check the package orientation before wiring.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Sensor playground · Temperature</p><h3>Turn heat into a number.</h3><p>Change the temperature and watch the thermometer and simulated sensor voltage respond. The code converts an analog reading back to degrees Celsius.</p><label for="temperature-value">Temperature (°C) <output id="temperature-output">22</output></label><input type="range" id="temperature-value" min="-10" max="50" value="22"><details><summary>Wiring & what the reading means</summary><p>TMP36: connect +Vs to 5 V, Vout to A0, and GND to GND. Check the package pinout before wiring. This example assumes the Uno’s default 5 V analog reference. It is not the conversion formula for a thermistor or DHT sensor.</p><p>Run this sketch on its own. Open Serial Monitor at 9600 baud to see the readings.</p><a href="https://learn.adafruit.com/tmp36-temperature-sensor/overview" target="_blank" rel="noopener noreferrer">Read the reference ↗</a></details><pre><code id="temperature-code"></code></pre><button class="secondary-button" data-copy-lesson="temperature">Copy Arduino sketch</button><p id="temperature-copy-status" class="small" role="status"></p><p class="small">Illustrative browser simulation for an Arduino Uno, not a live sensor. Real readings vary with hardware and calibration.</p></div></div>
+<div class="demo" id="demo-rain" hidden><div class="visual lesson-visual"><span class="visual-label">Resistive rain plate · Analog</span><div id="rain-scene" class="sensor-scene rain-scene" aria-hidden="true"><span class="sensor-object"></span><span class="sensor-symbol">☁</span></div><p id="rain-reading" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-rain.svg" alt="Illustration of Rain plate + interface module" width="420" height="265" loading="lazy"><figcaption><h4>Rain plate + interface module</h4><p>Water bridges the exposed tracks on the plate. The interface module turns the changing resistance into a reading.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Sensor playground · Rain</p><h3>Make it rain.</h3><p>Increase the simulated plate wetness to add droplets. Once the raw reading crosses the threshold, the built-in LED signals a wet plate.</p><label for="rain-value">Plate wetness (%) <output id="rain-output">0</output></label><input type="range" id="rain-value" min="0" max="100" value="0"><details><summary>Wiring & what the reading means</summary><p>Use a rain module rated for 5 V: VCC to 5 V, GND to GND, AO to A0. Keep the module electronics dry. This example assumes a lower reading when wet. Measure your dry and wet readings, then calibrate the threshold; this is not rainfall in millimetres.</p><p>Run this sketch on its own. Open Serial Monitor at 9600 baud to see the readings.</p><a href="https://docs.arduino.cc/language-reference/en/functions/analog-io/analogRead/" target="_blank" rel="noopener noreferrer">Read the reference ↗</a></details><pre><code id="rain-code"></code></pre><button class="secondary-button" data-copy-lesson="rain">Copy Arduino sketch</button><p id="rain-copy-status" class="small" role="status"></p><p class="small">Illustrative browser simulation for an Arduino Uno, not a live sensor. Real readings vary with hardware and calibration.</p></div></div>
+<div class="demo" id="demo-light" hidden><div class="visual lesson-visual"><span class="visual-label">Photoresistor · Analog</span><div id="light-scene" class="sensor-scene light-scene" aria-hidden="true"><span class="sensor-object"></span><span class="sensor-symbol">☀</span></div><p id="light-reading" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-light.svg" alt="Illustration of Photoresistor (LDR)" width="420" height="265" loading="lazy"><figcaption><h4>Photoresistor (LDR)</h4><p>The resistance changes with light. Combine it with a fixed resistor to make a voltage divider for an analog input.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Sensor playground · Light</p><h3>Let the room get darker.</h3><p>Adjust the ambient light. A simple threshold turns the built-in LED on when the simulated room is dark.</p><label for="light-value">Ambient light (%) <output id="light-output">75</output></label><input type="range" id="light-value" min="0" max="100" value="75"><details><summary>Wiring & what the reading means</summary><p>Make a voltage divider: 5 V → photoresistor → A0 → 10 kΩ resistor → GND. With this arrangement, a higher reading means more light. Calibrate the threshold in your room. This relative reading is not a lux measurement.</p><p>Run this sketch on its own. Open Serial Monitor at 9600 baud to see the readings.</p><a href="https://learn.adafruit.com/photocells/using-a-photocell" target="_blank" rel="noopener noreferrer">Read the reference ↗</a></details><pre><code id="light-code"></code></pre><button class="secondary-button" data-copy-lesson="light">Copy Arduino sketch</button><p id="light-copy-status" class="small" role="status"></p><p class="small">Illustrative browser simulation for an Arduino Uno, not a live sensor. Real readings vary with hardware and calibration.</p></div></div>
+<div class="demo" id="demo-motion" hidden><div class="visual lesson-visual"><span class="visual-label">PIR · Digital</span><div id="motion-scene" class="sensor-scene motion-scene" aria-hidden="true"><span class="sensor-object"></span><span class="sensor-symbol">◉</span></div><p id="motion-reading" role="status"></p><figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-motion.svg" alt="Illustration of PIR motion module" width="420" height="265" loading="lazy"><figcaption><h4>PIR motion module</h4><p>The faceted lens focuses infrared onto the sensing element. The module signals changes caused by movement.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div><div class="demo-copy"><p class="eyebrow">Sensor playground · Motion</p><h3>Move through the sensing area.</h3><p>Move the pointer across the scene or drag on touch to simulate motion. The signal stays high for two seconds after the last movement. A button provides the same interaction with a keyboard.</p><button id="motion-trigger" class="project-button">Simulate movement</button><details><summary>Wiring & what the reading means</summary><p>For a compatible PIR module, connect VCC to its rated supply, GND to GND, and OUT to Uno pin 2. Check its pin labels. Real PIRs detect changes in infrared, need warm-up time, and have model-specific hold and retrigger settings.</p><p>Run this sketch on its own. Open Serial Monitor at 9600 baud to see the readings.</p><a href="https://learn.adafruit.com/pir-passive-infrared-proximity-motion-sensor/testing-a-pir" target="_blank" rel="noopener noreferrer">Read the reference ↗</a></details><pre><code id="motion-code"></code></pre><button class="secondary-button" data-copy-lesson="motion">Copy Arduino sketch</button><p id="motion-copy-status" class="small" role="status"></p><p class="small">Illustrative browser simulation for an Arduino Uno, not a live sensor. Real readings vary with hardware and calibration.</p></div></div>
+<div class="demo" id="demo-touch" hidden>
+<div class="visual touch-visual">
+<span class="visual-label">INPUT → RULE → FEEDBACK</span>
+<button id="touch-button" class="jelly-button" aria-label="Activate the jellyfish light" aria-pressed="false">
+<span class="jelly" aria-hidden="true">
+<i class="bell">
+</i>
+<i class="tentacle t1">
+</i>
+<i class="tentacle t2">
+</i>
+<i class="tentacle t3">
+</i>
+<i class="tentacle t4">
+</i>
+</span>
+</button>
+<p id="touch-status" role="status">Resting · tap the jellyfish to activate</p>
+<figure class="hardware-reference"><p class="hardware-kicker">Meet the component</p><img src="images/hardware-touch.svg" alt="Illustration of Capacitive touch electrode" width="420" height="265" loading="lazy"><figcaption><h4>Capacitive touch electrode</h4><p>A conductive surface can act as a touch input when connected to a suitable sensing circuit. This is a possible input, not the installation’s documented hardware.</p><span>Simplified illustration. Use the wiring notes for connections.</span></figcaption></figure></div>
+<div class="demo-copy">
+<p class="eyebrow">Interaction design</p>
+<h3>Make the response feel right.</h3>
+<p>A small action should produce clear feedback. Tap the jellyfish, then adjust its glow to see how an input becomes an experience.</p>
+<label for="glow">Active glow <output id="glow-value">75%</output>
+</label>
+<input id="glow" type="range" min="20" max="100" value="75">
+<pre>
+<code id="touch-code">const touched = false;
+const brightness = touched ? 0.75 : 0.15;
+light.style.opacity = brightness;</code>
+</pre>
+<p class="small">A browser illustration inspired by the installation; not its original hardware code.</p>
+<details>
+<summary>How could a touch become an input?</summary>
+<p>A capacitive sensor can detect a change in its electric field. Software can translate that reading into a state that controls a light. This demo uses a button instead of a physical sensor.</p>
+<figure>
+<img class="sensor" src="https://upload.wikimedia.org/wikipedia/commons/d/df/Capacitive_sensor_scheme.svg" alt="Capacitive sensor schematic showing sensing and ground electrodes with electric field lines" width="210" height="165" loading="lazy">
+<figcaption>General reference: <a href="https://commons.wikimedia.org/wiki/File:Capacitive_sensor_scheme.svg" target="_blank" rel="noopener noreferrer">MatthiasDD / Wikimedia Commons</a> · Public domain. Not the installation’s wiring diagram.</figcaption>
+</figure>
+</details>
+</div>
+</div>
+<div class="demo" id="demo-shelf" hidden>
+<div class="visual shelf-visual">
+<span class="visual-label">A RULE, NOT A FIXED OBJECT</span>
+<div id="shelf-preview" class="shelf-preview" role="img" aria-label="Schematic shelf preview">
+</div>
+<p id="shelf-status" role="status">
+</p>
+<figure class="hardware-reference"><p class="hardware-kicker">The physical idea</p><img src="images/hardware-shelf.svg" alt="Illustration of Parametric structure" width="420" height="265" loading="lazy"><figcaption><h4>Parametric structure</h4><p>This tab explores a designed object rather than a sensor. The dividers and shelves illustrate how repeated parts follow a shared rule.</p><span>Simplified illustration</span></figcaption></figure></div>
+<div class="demo-copy">
+<p class="eyebrow">Digital design</p>
+<h3>Change a parameter.<br>Change the object.</h3>
+<p>Parametric design describes relationships. Adjust the width or number of dividers and the structure redraws itself from the same rules.</p>
+<label for="dividers">Vertical dividers <output id="dividers-value">6</output>
+</label>
+<input id="dividers" type="range" min="3" max="12" value="6">
+<label for="shelf-width">Width <output id="width-value">120 cm</output>
+</label>
+<input id="shelf-width" type="range" min="80" max="180" step="10" value="120">
+<pre>
+<code id="shelf-code">
+</code>
+</pre>
+<p class="small">Conceptual sketch; not fabrication-ready dimensions.</p>
+<a href="parametricshelf.html">Explore the physical project ↗</a>
+</div>
+</div>
+</section>
+<section id="about" class="section about">
+<div>
+<p class="eyebrow">03 / Behind the prototypes</p>
+<h2>Curious by nature.<br>Hands-on by default.</h2>
+<p>I’m Kristoffer Hygum, a digital designer and maker studying Digital Transformation at Roskilde University. My work combines design, technology, and rapid prototyping to turn ideas into playful, tangible experiences.</p>
+<p>I work with digital fabrication, rapid prototyping, and teaching, helping others bring creative and technical projects to life through laser cutting, 3D printing, and hands-on experimentation.</p>
+<a href="https://www.linkedin.com/in/kristoffer-n-56207aba/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+</div>
+<div class="experience">
+<h3>Experience & education</h3>
+<div>
+<span>2024 – Present</span>
+<h4>Master’s in Digital Transformation</h4>
+<p>Roskilde University</p>
+</div>
+<div>
+<span>2023 – Present</span>
+<h4>Teaching Assistant</h4>
+<p>Design Methods and Technology · Design in the Field · Interactive Digital Systems</p>
+</div>
+<div>
+<span>2022 – Present</span>
+<h4>Technological Consultant · Student Helper</h4>
+<p>Digital fabrication, technical guidance, and prototyping support</p>
+</div>
+<div>
+<span>2021 – 2024</span>
+<h4>Humanistic-Technological Bachelor</h4>
+<p>Roskilde University</p>
+</div>
+</div>
+</section>
+<section class="contact-section">
+<p class="eyebrow">Keep exploring</p>
+<a href="#lab">Learn by trying. <span>↑</span></a>
+</section>
+</main>
+<footer class="site-footer">
+<span>© <span data-year>2026</span> Kristoffer Hygum</span>
+<span>Designed to be explored.</span>
+<a href="https://instagram.com/Cocoloco98" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+</footer>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parametric Shelf System — Kristoffer Hygum</title>
+  <title>Parametric Shelf System | Kristoffer Hygum</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <!-- Favicon -->
@@ -11,6 +11,7 @@
 
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a><header><a class="brand" href="index.html">KH<span>Kristoffer Hygum</span></a><nav aria-label="Main navigation"><a href="index.html#work">Work</a><a href="index.html#lab">Playground</a><a href="index.html#about">About</a><a href="https://www.linkedin.com/in/kristoffer-n-56207aba/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></nav></header>
   <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -26,87 +27,38 @@
         I have a hands-on approach to design, often working with laser cutting, 3D printing, and fabrication tools to prototype and test ideas quickly.
       </p>
       <p>
-        Alongside my studies, I work as a technological consultant at FABLAB RUC and as a teaching assistant, helping others bring creative and technical projects to life.
+        Alongside my studies, I work with technical guidance and teaching, helping others develop, prototype, and build creative projects.
       </p>
       <div class="contact-links">
-        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
-        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
+        <a href="https://www.linkedin.com/in/kristoffer-n-56207aba/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+        <a href="https://instagram.com/Cocoloco98" target="_blank" rel="noopener noreferrer">Instagram</a>
       </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="content">
+    <main class="content" id="main">
       <section>
         <h2>Parametric Shelf System</h2>
         <p>An adaptive shelving concept exploring modular design principles and digital fabrication.</p>
         <img src="images/ParametricShelf.png" alt="Parametric Shelf System" class="project-image">
         <p>
-          The Parametric Shelf System explores how CAD tools and parametric design can support 
-          adaptable and customizable furniture. Using digital fabrication tools, the shelf’s structure 
+          The Parametric Shelf System explores how CAD tools and parametric design can support
+          adaptable and customizable furniture. Using digital fabrication tools, the shelf’s structure
           can be modified to fit different spaces and user needs, merging craftsmanship with generative design.
         </p>
 
-        <a href="index.html" class="project-button">← Back to Portfolio</a>
+        <aside class="case-lab-link"><h3>Explore the rules behind the form</h3><p>Change the width and number of dividers in a simplified interactive sketch.</p><a href="index.html?demo=shelf#lab">Try the experiment ↗</a></aside>
+<a href="index.html#work" class="project-button">← Back to Portfolio</a>
       </section>
 
       <footer>
-        <p>© 2025 Kristoffer Hygum</p>
+        <p>© <span data-year>2026</span> Kristoffer Hygum</p>
       </footer>
     </main>
   </div>
 
   <!-- Project fade-in animation + page transition -->
-<script>
-  // === Staggered fade-in for projects ===
-  const projects = document.querySelectorAll('.project');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        // Add a slight delay for each project
-        entry.target.style.transitionDelay = `${index * 150}ms`;
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-        entry.target.style.transitionDelay = '0ms';
-      }
-    });
-  }, { threshold: 0.2 });
-
-  projects.forEach(el => observer.observe(el));
-
-
-  // === Smooth page transitions ===
-
-  // Handle browser back/forward navigation (fix for white screen)
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      document.body.classList.add('loaded');
-    }
-  });
-
-  // Fade in when the page loads
-  window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-  });
-
-  // Fade out before navigating away
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', e => {
-      const href = link.getAttribute('href');
-      if (
-        href &&
-        !href.startsWith('#') &&
-        !href.startsWith('mailto:') &&
-        !href.startsWith('http')
-      ) {
-        e.preventDefault();
-        document.body.classList.remove('loaded');
-        setTimeout(() => (window.location = href), 300);
-      }
-    });
-  });
-</script>
+<script src="script.js" defer></script>
 
 </body>
 </html>
