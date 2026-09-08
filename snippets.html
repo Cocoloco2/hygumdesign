@@ -22,17 +22,17 @@
       <section>
         <div class="page-intro">
           <h2>Sensor Snippets</h2>
-          <p>Copy-paste Arduino/ESP32 code for common sensors used in rapid prototyping. Each snippet is a minimal working example — wire it up, upload it, and build from there. Drop a photo or GIF into <code>images/snippets/</code> with the filename shown under each snippet to show what it looks like in action.</p>
+          <p>Copy-paste Arduino/ESP32 code for common sensors used in rapid prototyping. Each snippet is a minimal working example — wire it up, upload it, and build from there.</p>
         </div>
 
         <div class="filter-row">
-          <span class="filter-tag active" data-filter="all">All</span>
-          <span class="filter-tag" data-filter="distance">Distance</span>
-          <span class="filter-tag" data-filter="motion">Motion</span>
-          <span class="filter-tag" data-filter="environment">Environment</span>
-          <span class="filter-tag" data-filter="input">Input</span>
-          <span class="filter-tag" data-filter="output">Output</span>
-          <span class="filter-tag" data-filter="led">NeoPixel / LED</span>
+          <button type="button" class="filter-tag active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-tag" data-filter="distance" aria-pressed="false">Distance</button>
+          <button type="button" class="filter-tag" data-filter="motion" aria-pressed="false">Motion</button>
+          <button type="button" class="filter-tag" data-filter="environment" aria-pressed="false">Environment</button>
+          <button type="button" class="filter-tag" data-filter="input" aria-pressed="false">Input</button>
+          <button type="button" class="filter-tag" data-filter="output" aria-pressed="false">Output</button>
+          <button type="button" class="filter-tag" data-filter="led" aria-pressed="false">NeoPixel / LED</button>
         </div>
 
         <!-- HC-SR04 Ultrasonic -->
@@ -255,10 +255,7 @@ void loop() {
           <h3>ESP32 — Connect to WiFi</h3>
           <div class="snippet-meta"><span>ESP32</span><span>Output</span></div>
           <p class="desc">Minimal boilerplate to get an ESP32 on your network — the first step for anything web-connected.</p>
-          <div class="snippet-media">
-            <img src="images/snippets/esp32-wifi.gif" alt="ESP32 WiFi demo">
-            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/esp32-wifi.gif</code></div>
-          </div>
+
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;WiFi.h&gt;
@@ -290,10 +287,7 @@ void loop() {
           <h3>NeoPixel — Cycle Colors with a For Loop</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">Uses the Adafruit NeoPixel library (install "Adafruit NeoPixel" via Library Manager). A small helper function fills every pixel with one color at a time — call it with different red/green/blue values to cycle colors, no arrays or fancy types needed.</p>
-          <div class="snippet-media">
-            <img src="images/snippets/neopixel-forloop.gif" alt="NeoPixel color cycle demo">
-            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-forloop.gif</code></div>
-          </div>
+
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -337,10 +331,7 @@ void setAllPixels(int red, int green, int blue) {
           <h3>NeoPixel — Hardcoded Per-Pixel Colors</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">Sets each LED to its own fixed color, one line per pixel. Useful when you want a specific, unchanging pattern rather than something generated in code.</p>
-          <div class="snippet-media">
-            <img src="images/snippets/neopixel-hardcoded.gif" alt="NeoPixel hardcoded colors demo">
-            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-hardcoded.gif</code></div>
-          </div>
+
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -376,10 +367,7 @@ void loop() {
           <h3>NeoPixel — Chase Animation</h3>
           <div class="snippet-meta"><span>Arduino</span><span>NeoPixel</span></div>
           <p class="desc">A single lit pixel runs down the strip and loops back to the start — the classic "Cylon"/chase effect. Swap the color or add a second pixel offset in the loop for variations.</p>
-          <div class="snippet-media">
-            <img src="images/snippets/neopixel-chase.gif" alt="NeoPixel chase animation demo">
-            <div class="media-placeholder"><span class="ph-icon">🖼</span>Drop a photo or GIF at<br><code>images/snippets/neopixel-chase.gif</code></div>
-          </div>
+
           <div class="code-block">
             <button class="copy-btn">Copy</button>
             <pre><code>#include &lt;Adafruit_NeoPixel.h&gt;
@@ -442,8 +430,9 @@ void loop() {
 
     tags.forEach(tag => {
       tag.addEventListener('click', () => {
-        tags.forEach(t => t.classList.remove('active'));
+        tags.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-pressed','false'); });
         tag.classList.add('active');
+        tag.setAttribute('aria-pressed','true');
         const filter = tag.dataset.filter;
 
         cards.forEach(card => {

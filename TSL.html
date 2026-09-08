@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EK Tech and Story Lab — Editable 3D Model</title>
 <style>
   html,body{margin:0;padding:0;overflow:hidden;background:#f4f1ea;font-family:'Helvetica Neue',Arial,sans-serif;}
@@ -33,6 +34,14 @@
   #dimsBox input{width:100%;box-sizing:border-box;padding:5px 6px;border-radius:6px;border:1px solid #ddd8c8;font-size:12px;}
   #noSel{color:#8a8879;font-size:11px;}
   hr{border:none;border-top:1px solid #eae6d9;margin:10px 0;}
+  @media(max-width:700px){
+    #hud{top:12px;left:12px;right:12px;max-width:none;padding:10px;box-sizing:border-box;background:rgba(255,255,255,.94);border-radius:8px;}
+    #hud p{font-size:12px;}
+    #legend{top:124px;bottom:auto;left:12px;max-height:15vh;font-size:12px;}
+    #panel{top:auto;bottom:12px;left:12px;right:12px;width:auto;max-height:32vh;box-sizing:border-box;}
+    #hint{left:12px;right:12px;bottom:calc(32vh + 28px);max-width:none;text-align:left;font-size:12px;}
+    button.tool,select.tool{font-size:14px;min-height:36px;}
+  }
 </style>
 </head>
 <body>
