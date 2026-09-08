@@ -18,7 +18,6 @@ if (buttons.length) {
     touch.setAttribute('aria-label', touched ? 'Deactivate the jellyfish light' : 'Activate the jellyfish light');
     document.getElementById('glow-value').textContent = `${glow.value}%`;
     document.getElementById('touch-status').textContent = touched ? `Responding · ${glow.value}% glow · tap to rest` : 'Resting · tap the jellyfish to activate';
-    document.getElementById('touch-code').textContent = `const touched = ${touched};\nconst brightness = touched ? ${(Number(glow.value)/100).toFixed(2)} : 0.15;\nlight.style.opacity = brightness;`;
   }
   touch.addEventListener('click', () => { touched = !touched; updateTouch(); });
   glow.addEventListener('input', updateTouch);

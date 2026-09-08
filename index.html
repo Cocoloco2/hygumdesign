@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="style.css?v=20260908-layout">
 <script src="sensors.js" defer></script>
 <script src="lessons.js" defer></script>
-<script src="script.js" defer></script>
+<script src="script.js?v=20260908-touch" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -167,14 +167,50 @@
 </label>
 <input id="glow" type="range" min="20" max="100" value="75">
 <pre>
-<code id="touch-code">const touched = false;
-const brightness = touched ? 0.75 : 0.15;
-light.style.opacity = brightness;</code>
+<code id="touch-code">void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+
+  Serial.print(touchRead(A0, A1));
+  Serial.print(",");
+  // add more touch points
+  /*
+  Serial.print(touchRead(A0, A2));
+  Serial.print(",");
+  Serial.println(touchRead(A1, A2));
+  */
+  Serial.println("");
+}
+
+
+float touchRead(int pin1, int pin2) {
+
+  float smoothValue = 0;
+  pinMode(pin1, OUTPUT);
+  pinMode(pin2, INPUT);
+  for (int i = 0; i &lt; 100; i++) {
+
+    digitalWrite(pin1, HIGH);
+    delayMicroseconds(5);
+    int high = analogRead(pin2);
+    digitalWrite(pin1, LOW);
+    delayMicroseconds(5);
+    int low = analogRead(pin2);
+    smoothValue = smoothValue * 0.9f + (float)(high - low) * 0.1f;
+  }
+
+  return (float)smoothValue;
+}</code>
 </pre>
-<p class="small">A browser illustration inspired by the installation; not its original hardware code.</p>
+<button class="secondary-button" data-copy-lesson="touch">Copy Arduino sketch</button>
+<p id="touch-copy-status" class="small" role="status"></p>
+<p class="small">The sketch prints sensor readings. The jellyfish glow is a separate browser illustration.</p>
 <details>
-<summary>How could a touch become an input?</summary>
-<p>A capacitive sensor can detect a change in its electric field. Software can translate that reading into a state that controls a light. This demo uses a button instead of a physical sensor.</p>
+<summary>How does the touch sketch work?</summary>
+<p><code>touchRead(A0, A1)</code> drives A0 HIGH and LOW, then reads A1 after each change. It smooths the difference between those readings over 100 iterations and prints the result at 9600 baud.</p>
+<p>Open Serial Monitor at 9600 baud to inspect the readings. The commented section shows how to add more pin pairs. The glow slider changes only the browser preview; it does not change the sketch.</p>
 <figure>
 <img class="sensor" src="https://upload.wikimedia.org/wikipedia/commons/d/df/Capacitive_sensor_scheme.svg" alt="Capacitive sensor schematic showing sensing and ground electrodes with electric field lines" width="210" height="165" loading="lazy">
 <figcaption>General reference: <a href="https://commons.wikimedia.org/wiki/File:Capacitive_sensor_scheme.svg" target="_blank" rel="noopener noreferrer">MatthiasDD / Wikimedia Commons</a> · Public domain. Not the installation’s wiring diagram.</figcaption>
