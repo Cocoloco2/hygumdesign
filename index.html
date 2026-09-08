@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<<<<<<< HEAD
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Kristoffer Hygum, digital designer and maker exploring interaction design, digital transformation and tangible experiences.">
@@ -10,195 +9,7 @@
 <link rel="stylesheet" href="style.css">
 <script src="sensors.js" defer></script>
 <script src="lessons.js" defer></script>
-<script src="script.js" defer>
-=======
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kristoffer Hygum — Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
-
-</head>
-
-<body>
-  <nav class="topnav">
-    <a href="index.html" class="active">Portfolio</a>
-    <a href="snippets.html">Sensor Snippets</a>
-    <a href="tools.html">Tools</a>
-  </nav>
-  <div class="container">
-    <!-- === LEFT COLUMN: About Sidebar === -->
-    <aside class="sidebar">
-      <h1>About Me:</h1>
-      <p>
-        I’m Kristoffer Hygum, a digital designer and maker currently wokring at EK LABS in Copenhagen. 
-      </p>
-      <p>
-        My work combines design, technology, and rapid prototyping to turn ideas into playful, tangible experiences.
-      </p>
-      <p>
-        I have a hands-on approach to design, often working with laser cutting, 3D printing, and fabrication tools to prototype and test ideas quickly.
-      </p>
-      <!-- === LEFT COLUMN: Experience === -->
-  <h3 class="experience">Experience & Education</h3>
-
-  <div class="exp-item">
-    <strong> 2026 - present</strong>
-    <p> Labassistant at EK Labs</p>
-    <em>EK - Erhvervs­akademi Køben­havn</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2024 – 2026</strong>
-    <p>Master’s in Digital Transformation</p>
-    <p>Digital designer</p>
-    <em>Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2023 – 2026</strong>
-    <p>Teaching Assistant For: </p>
-    <p>Design Methods And technology</p>
-    <p>Design In The Field</p>
-    <p>Interactive Degital Systems</p>
-    <em>Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2022 – 2026</strong>
-    <p>Technological Consultant Student Helper</p>
-    <em>FABLAB Roskilde University</em>
-  </div>
-
-  <div class="exp-item">
-    <strong>2021 – 2024</strong>
-    <p>Bachelor’s in Humanistic-Technological Bachelor</p>
-    <p>Infomatic and Computer Science</p>
-    <em>Roskilde University</em>
-  </div>
-
-
-
-      <div class="contact-links">
-        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
-        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
-      </div>
-    </aside>
-
-    <!-- === RIGHT COLUMN: Main Content === -->
-    <main class="content">
-      <!-- Projects Section -->
-      <section>
-        <h2 class="section-intro">
-          A selection of recent projects exploring interaction, materiality, and digital design.
-        </h2>
-
-        <div class="project">
-          <h3>What once flew on Roskilde Festival</h3>
-          <p>A light installation and research into robust materiality with a soft look.</p>
-          <img src="images/OnceFlew.JPG" alt="What once flew on Roskilde Festival" class="project-image">
-          <a href="whatonceflew.html" class="project-button">View Project</a>
-        </div>
-
-        <div class="project">
-          <h3>Jellyfish on Roskilde Festival</h3>
-          <p>An interactive light installation reacting to human touch.</p>
-          <img src="images/Roskilde2025.jpg" alt="Jellyfish on Roskilde Festival" class="project-image">
-          <a href="jellyfish.html" class="project-button">View Project</a>
-        </div>
-
-        
-        <div class="projects">
-          <div class="project">
-            <h3>Parametric Shelf System</h3>
-            <p>An adaptive shelving concept exploring modular design principles.</p>
-            <img src="images/ParametricShelf.png" alt="Parametric Shelf" class="project-image">
-            <a href="parametricshelf.html" class="project-button">View Project</a>
-          </div>
-
-
-          <div class="project">
-            <h3>Feel You Pictures</h3>
-            <p>A tactile photography experiment blending visual media with sensory interaction.</p>
-            <img src="images/3DFrame.jpg" alt="Feel You Pictures" class="project-image">
-            <a href="3dframe.html" class="project-button">View Project</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer>
-        <p>© 2025 Kristoffer Hygum</p>
-      </footer>
-    </main>
-  </div>
-
- <!-- Project fade-in animation + page transition -->
-<script>
-  // === Staggered fade-in for projects ===
-  const projects = document.querySelectorAll('.project');
-
-  // === Intersection Observer for scroll fade ===
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        entry.target.style.transitionDelay = `${index * 150}ms`;
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-        entry.target.style.transitionDelay = '0ms';
-      }
-    });
-  }, { threshold: 0.2 });
-
-  projects.forEach(el => observer.observe(el));
-
-  // === Make the first two visible immediately on page load (but still observed) ===
-  window.addEventListener("load", () => {
-    projects.forEach((project, i) => {
-      if (i < 2) {
-        project.classList.add('visible');
-        project.style.transitionDelay = `${i * 150}ms`;
-      }
-    });
-  });
-
-
-  // === Smooth page transitions ===
-
-  // Fix for white screen when using back/forward navigation
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      document.body.classList.add('loaded');
-    }
-  });
-
-  // Fade in when the page loads
-  window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-  });
-
-  // Fade out before navigating away
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', e => {
-      const href = link.getAttribute('href');
-      if (
-        href &&
-        !href.startsWith('#') &&
-        !href.startsWith('mailto:') &&
-        !href.startsWith('http')
-      ) {
-        e.preventDefault();
-        document.body.classList.remove('loaded');
-        setTimeout(() => (window.location = href), 300);
-      }
-    });
-  });
->>>>>>> 414ea32bb2733ed73b36126033c9d66b73bd3229
-</script>
+<script src="script.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -236,12 +47,21 @@
 <p>Experiments in light, material, and interaction.</p>
 </div>
 <div class="projects">
-<a class="project featured" href="jellyfish.html">
+<a class="project featured butterfly-project" href="whatonceflew.html">
+<div class="image-wrap">
+<img src="images/butterfly-festival-night.png" alt="Giant illuminated butterfly above visitors at Roskilde Festival 2026" width="659" height="989">
+<span aria-hidden="true">↗</span>
+</div>
+<div class="meta">Kinetic sculpture · Roskilde Festival 2026 <span>01</span></div>
+<h3>What Once Flew</h3>
+<p>A giant butterfly exploring movement, light, and our relationship with nature.</p>
+</a>
+<a class="project" href="jellyfish.html">
 <div class="image-wrap">
 <img src="images/Roskilde2025.jpg" alt="Jellyfish installation at Roskilde Festival">
 <span aria-hidden="true">↗</span>
 </div>
-<div class="meta">Interaction design · Installation <span>01</span>
+<div class="meta">Interaction design · Installation <span>02</span>
 </div>
 <h3>Jellyfish at Roskilde Festival</h3>
 <p>A shared sensory experience, sparked by human touch.</p>
@@ -251,7 +71,7 @@
 <img src="images/ParametricShelf.png" alt="Sculpted parametric shelf system" loading="lazy">
 <span aria-hidden="true">↗</span>
 </div>
-<div class="meta">Parametric design · Fabrication <span>02</span>
+<div class="meta">Parametric design · Fabrication <span>03</span>
 </div>
 <h3>Parametric Shelf System</h3>
 <p>One system. Many possible forms.</p>
@@ -261,7 +81,7 @@
 <img src="images/3DFrame.jpg" alt="Tactile photography frame prototype" loading="lazy">
 <span aria-hidden="true">↗</span>
 </div>
-<div class="meta">Tangible interaction · Prototyping <span>03</span>
+<div class="meta">Tangible interaction · Prototyping <span>04</span>
 </div>
 <h3>Feel Your Pictures</h3>
 <p>Exploring photography beyond the visual.</p>

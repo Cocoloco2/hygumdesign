@@ -1,167 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What Once Flew — Kristoffer Hygum</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="images/favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Once Flew | Kristoffer Hygum</title>
+<meta name="description" content="A giant butterfly sculpture made for Roskilde Festival 2026 by Kristoffer Hygum Nielsen, Frederik Göbel and Rikke van Hauen. Explore the installation and its prototypes.">
+<link rel="icon" href="images/favicon.png">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="topnav">
-    <a href="index.html">Portfolio</a>
-    <a href="snippets.html">Sensor Snippets</a>
-    <a href="tools.html">Tools</a>
-  </nav>
-
-  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h1>Kristoffer Hygum</h1>
-      <p>Digital designer and maker. Focused on interaction design and prototyping.</p>
-      <p>
-        I’m Kristoffer Hygum, a digital designer and maker with a master’s degree in Digital Transformation from Roskilde University.
-      </p>
-      <p>
-        My work explores how technology, design, and rapid prototyping can create new forms of interaction and experience.
-      </p>
-      <p>
-        I have a hands-on approach to design, often working with laser cutting, 3D printing, and fabrication tools to prototype and test ideas quickly.
-      </p>
-      <p>
-        I work as a technological consultant at EK, helping others bring creative and technical projects to life.
-      </p>
-      <div class="contact-links">
-        <a href="mailto:Kristofferhn@hotmail.com">Email</a>
-        <a href="https://instagram.com/Cocoloco98" target="_blank">Instagram</a>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="content">
-      <section>
-        <h2>What Once Flew</h2>
-        <p>A kinetic sculpture for Roskilde Festival 2026, built around a butterfly that went extinct the same year the festival began.</p>
-
-        <img src="images/WhatOnceFlew1.jpg" alt="What Once Flew — render of the creature, front view" class="project-image">
-
-        <p>
-          In this group, we're fascinated by how skilled nature is at designing beautiful things
-          and how skilled we humans are at destroying them.
-        </p>
-        <p>
-          Roskilde Festival began in 1971. That same year, a butterfly called the <em>Herorandøje</em>
-          went extinct. And we kept going. For the last 55 years we've lived our lives without giving
-          much thought to the fact that it hasn't been part of our world, like so many other species
-          lost in that same period.
-        </p>
-        <p>
-          This year, we're bringing it back as a "creature of the forest": a strange, utopian, unknown
-          animal. Not because it chose to become that, but because we made it that way.
-        </p>
-
-        <img src="images/WhatOnceFlew2.jpg" alt="What Once Flew — close-up render of the wings and body" class="project-image">
-
-        <p>
-          We've imagined it as a hybrid creature, built from metal, acrylic, or a combination of both.
-          Its body should feel both fragile and unnatural, as if it has been brought back through human
-          hands rather than through nature itself. The materials make it clear that this isn't just a
-          butterfly, but something reconstructed and transformed.
-        </p>
-        <p>
-          When activated by an audience, it doesn't fly gracefully. Its movement is deliberately strange,
-          heavy, and a little uncanny. Instead of mirroring the lightness of a living butterfly, it moves
-          like a constructed version of life, as if something extinct is trying to return through the
-          materials we've given it.
-        </p>
-        <p>
-          We want to start a conversation with the audience about how complex and layered "sustainability"
-          really is, and how far into an urgent mission we already are, the mission of finding balance
-          between people and nature. Our hope is that people leave with a heightened awareness of the
-          resources we consume, and the impact we have, every day, on our shared planet and everything
-          living on it.
-        </p>
-
-        <img src="images/WhatOnceFlew3.jpg" alt="Cardboard prototype of the creature with a string-pull mechanism" class="project-image">
-
-        <p>
-          <strong>Prototyping the movement.</strong> We've found an old actuator, which we're currently
-          using to prototype how the creature could move. In parallel, we're developing a mechanical,
-          power-free alternative, a hand crank that lets the visitor make it fly themselves.
-        </p>
-
-        <img src="images/WhatOnceFlew4.jpg" alt="Laser-cut wing prototype in cardboard and acrylic, held up to a window" class="project-image">
-        <img src="images/WhatOnceFlew5.jpg" alt="Both wing prototypes laid out, showing acrylic panels catching the light" class="project-image">
-
-        <p>
-          <strong>Material experiments.</strong> Alongside the mechanism, we're running material
-          experiments for the wings, especially looking at how to use light meaningfully, letting it
-          reflect through the material, and finding a material strong enough to carry the wing structure
-          through good weather and bad, while still being made from reused material.
-        </p>
-
-        <img src="images/WhatOnceFlew6.jpg" alt="Prototype hinge and actuator experiment for the wing mechanism" class="project-image">
-
-        <p>
-          A collaboration between Kristoffer Hygum Nielsen, Frederik Göbel, and Rikke van Hauen —
-          made for RF x RUC '26.
-        </p>
-
-        <a href="index.html" class="project-button">← Back to Portfolio</a>
-      </section>
-
-      <footer>
-        <p>© 2025 Kristoffer Hygum</p>
-      </footer>
-    </main>
-  </div>
-
-  <!-- Project fade-in animation + page transition -->
-<script>
-  const projects = document.querySelectorAll('.project');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-      if (entry.isIntersecting) {
-        entry.target.style.transitionDelay = `${index * 150}ms`;
-        entry.target.classList.add('visible');
-      } else {
-        entry.target.classList.remove('visible');
-        entry.target.style.transitionDelay = '0ms';
-      }
-    });
-  }, { threshold: 0.2 });
-
-  projects.forEach(el => observer.observe(el));
-
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      document.body.classList.add('loaded');
-    }
-  });
-
-  window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
-  });
-
-  document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', e => {
-      const href = link.getAttribute('href');
-      if (
-        href &&
-        !href.startsWith('#') &&
-        !href.startsWith('mailto:') &&
-        !href.startsWith('http')
-      ) {
-        e.preventDefault();
-        document.body.classList.remove('loaded');
-        setTimeout(() => (window.location = href), 300);
-      }
-    });
-  });
-</script>
-
+<a class="skip" href="#main">Skip to content</a>
+<header>
+<a class="brand" href="index.html">KH<span>Kristoffer Hygum</span>
+</a>
+<nav aria-label="Main navigation">
+<a href="index.html#work">Work</a>
+<a href="index.html#lab">Playground</a>
+<a href="index.html#about">About</a>
+<a href="https://www.linkedin.com/in/kristoffer-n-56207aba/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+</nav>
+</header>
+<main id="main" class="home butterfly-case">
+<section class="hero">
+<p class="eyebrow">Roskilde Festival 2026 · RF × RUC</p>
+<h1>What Once <em>Flew.</em></h1>
+<div class="hero-bottom"><p>A giant butterfly, brought to life through movement and light. Made with Frederik Göbel and Rikke van Hauen for Roskilde Festival.</p></div>
+</section>
+<section class="section butterfly-intro" aria-label="The installation">
+<figure class="butterfly-hero"><img src="images/butterfly-festival-night.png" alt="Pink illuminated butterfly wings towering above visitors at Roskilde Festival" width="659" height="989"><figcaption>What Once Flew at Roskilde Festival 2026.</figcaption></figure>
+<div>
+<p class="eyebrow">01 / At the festival</p>
+<h2>A familiar creature.<br>An unfamiliar presence.</h2>
+<p>We made a huge butterfly for Roskilde Festival: a constructed creature whose wings catch the light above the people gathered around it. The installation brings together sculpture, prototyping, and the experience of encountering something unexpected.</p>
+<p>The idea grew from a question: how can nature be so skilled at creating beautiful things, while humans are so capable of destroying them? Inspired by the butterfly Herorandøje, we imagined a creature reconstructed by human hands.</p>
+<p>Our intention was to invite reflection on the resources we use and the relationship between people and nature. The butterfly became a way to make that question physical.</p>
+<dl class="butterfly-facts"><div><dt>Made for</dt><dd>Roskilde Festival 2026 · RF × RUC</dd></div><div><dt>Team</dt><dd>Kristoffer Hygum Nielsen<br>Frederik Göbel<br>Rikke van Hauen</dd></div><div><dt>Explorations</dt><dd>Kinetic sculpture · Light · Material experiments</dd></div></dl>
+</div>
+</section>
+<section class="section butterfly-intro" aria-label="Light and scale">
+<div><p class="eyebrow">02 / Light & scale</p><h2>Wings against the night.</h2><p>Light traces the wings, revealing their surface and structure against the festival sky. Up close, the supporting frame and mechanism remain visible: this is a creature we have built, with the process of making it part of its character.</p><p>The festival photographs show the finished installation. The renders and prototypes below document the ideas and experiments that led up to it.</p></div>
+<figure><img src="images/butterfly-festival-light.png" alt="Pale illuminated butterfly wings and exposed frame above festival visitors" loading="lazy"><figcaption>The installation with its wings lit against the evening sky.</figcaption></figure>
+</section>
+<section class="section">
+<div class="heading"><div><p class="eyebrow">03 / From idea to installation</p><h2>Finding a way to fly.</h2></div><p>Concept renders and workshop experiments from our RF × RUC application.</p></div>
+<p class="butterfly-text">The early concept imagined a hybrid creature made from metal and acrylic. We wanted its movement to feel deliberately heavy and unfamiliar, rather than imitate a living butterfly. We explored a reused actuator alongside a mechanical, power-free approach driven by a visitor’s hand.</p>
+<div class="butterfly-gallery">
+<figure><img src="images/WhatOnceFlew1.jpg" alt="Early butterfly concept render with a pin through the body" loading="lazy"><figcaption>Concept render: a reconstructed butterfly, presented like a pinned specimen.</figcaption></figure>
+<figure><img src="images/WhatOnceFlew2.jpg" alt="Second render of the butterfly sculpture concept" loading="lazy"><figcaption>Exploring the relationship between the wings, body, and supporting structure.</figcaption></figure>
+<figure><img src="images/WhatOnceFlew3.jpg" alt="Cardboard butterfly prototype used for a string-pull experiment" loading="lazy"><figcaption>Cardboard prototype: testing wing movement with a string-pull mechanism.</figcaption></figure>
+<figure><img src="images/WhatOnceFlew4.jpg" alt="Wing prototype combining a cut structure with acrylic" loading="lazy"><figcaption>Material experiment: acrylic, light, and the wing structure.</figcaption></figure>
+<figure><img src="images/WhatOnceFlew5.jpg" alt="Further wing material experiment with acrylic" loading="lazy"><figcaption>Testing how the wing materials catch and reflect light.</figcaption></figure>
+<figure><img src="images/WhatOnceFlew6.jpg" alt="Actuator experiment for the butterfly mechanism" loading="lazy"><figcaption>Movement prototype: exploring a reused actuator.</figcaption></figure>
+</div>
+<p class="butterfly-text">Alongside the mechanism, we experimented with materials that could carry the wings and interact with light. Reuse and resistance to wind and rain were central questions in the development process.</p>
+</section>
+<section class="contact-section"><a href="index.html#work">Back to selected work <span>↗</span></a></section>
+</main>
+<footer class="site-footer"><span>© 2026 Kristoffer Hygum</span><span>A collaboration with Frederik Göbel and Rikke van Hauen.</span></footer>
 </body>
 </html>
