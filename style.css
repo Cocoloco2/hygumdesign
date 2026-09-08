@@ -199,8 +199,8 @@ nav{gap:12px 18px;justify-content:end}
 
 /* Butterfly case study and its portfolio entry. */
 /* Frame the original 659 × 989 photo around its upper wings. */
-.butterfly-project .image-wrap{aspect-ratio:547/308}
-.butterfly-project .image-wrap img{position:absolute;width:120.4753%;max-width:none;height:auto;left:-20.4753%;top:-19.4805%;transform-origin:50% 20%}
+.butterfly-project .image-wrap{height:350px}
+.butterfly-project .image-wrap img{position:absolute;width:120.4753%;max-width:none;height:auto;left:-20.4753%;top:0;margin-top:-10.9689%;transform-origin:50% 20%}
 .butterfly-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .butterfly-case figure{margin:0;min-width:0}
 .butterfly-case figure img{display:block;width:100%;height:auto;border-radius:4px}
@@ -213,3 +213,5 @@ nav{gap:12px 18px;justify-content:end}
 .butterfly-gallery{display:grid;grid-template-columns:1fr 1fr;gap:36px 28px;margin:30px 0}
 .butterfly-gallery figure img{height:380px;object-fit:contain;background:#edf0e8}
 @media(max-width:760px){.butterfly-intro,.butterfly-gallery{grid-template-columns:1fr;gap:28px}.butterfly-gallery figure img{height:auto;max-height:500px}}
+
+@media(max-width:760px){.butterfly-project .image-wrap{height:300px}}
