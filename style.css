@@ -198,7 +198,9 @@ nav{gap:12px 18px;justify-content:end}
 @media(max-width:760px){.visual>.hardware-reference{margin-top:22px;padding-top:22px}.hardware-reference img{max-width:330px}}
 
 /* Butterfly case study and its portfolio entry. */
-.butterfly-project .image-wrap img{height:auto;aspect-ratio:547/308;object-position:center}
+/* Frame the original 659 × 989 photo around its upper wings. */
+.butterfly-project .image-wrap{aspect-ratio:547/308}
+.butterfly-project .image-wrap img{position:absolute;width:120.4753%;max-width:none;height:auto;left:-20.4753%;top:-19.4805%;transform-origin:50% 20%}
 .butterfly-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .butterfly-case figure{margin:0;min-width:0}
 .butterfly-case figure img{display:block;width:100%;height:auto;border-radius:4px}
