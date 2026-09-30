@@ -138,7 +138,7 @@ nav{gap:12px 18px;justify-content:end}
 .led-visual{background:#202b25;color:#d5e5d8;min-width:0;justify-content:flex-start;gap:75px;padding-top:35px}
 .led-visual>div{width:100%;position:sticky;top:30px}
 .led-visual p{color:#d5e5d8;text-align:center}
-.led-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 14px;background:#131b17;padding:25px 16px;border-radius:8px}
+.led-strip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px 14px;background:#131b17;padding:25px 16px;border-radius:8px}
 .led-pixel{border:2px solid #6e8073;border-radius:8px;background:#26332b;min-height:65px;color:#e7eee8;position:relative;padding-top:31px;font-family:monospace}
 .led-pixel:before{content:'';position:absolute;width:19px;height:19px;top:9px;left:calc(50% - 9.5px);background:var(--pixel-color);border-radius:50%}
 .led-pixel.lit:before{box-shadow:0 0 18px 5px var(--pixel-color)}

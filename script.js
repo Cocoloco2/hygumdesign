@@ -42,25 +42,25 @@ if (buttons.length) {
 // The draft settings and displayed LEDs stay separate until show() is requested.
 const ledStrip = document.getElementById('led-strip');
 if (ledStrip) {
+  const LED_COUNT = 10;
   const colorInput = document.getElementById('led-color');
   const brightnessInput = document.getElementById('led-brightness');
   const targetInput = document.getElementById('led-target');
   const code = document.getElementById('led-code');
   const pending = document.getElementById('led-pending');
   let selected = 0;
-  let displayed = Array.from({length:8}, () => [0,0,0]);
+  let displayed = Array.from({length:LED_COUNT}, () => [0,0,0]);
   function rgb() {
     return [1,3,5].map(start => parseInt(colorInput.value.slice(start,start+2),16));
   }
   function sketch() {
     const values = rgb();
-    const level = (Number(brightnessInput.value)/100).toFixed(2);
     const assignment = targetInput.value === 'all'
-      ? '  for (int i = 0; i < PIXEL_COUNT; i++) {\n    pixels.setPixelColor(i, red, green, blue);\n  }'
-      : `  pixels.setPixelColor(${selected}, red, green, blue); // pixel ${selected}`;
-    return `#include <Adafruit_NeoPixel.h>\n\nconst int DATA_PIN = 6;\nconst int PIXEL_COUNT = 8;\nAdafruit_NeoPixel pixels(PIXEL_COUNT, DATA_PIN, NEO_GRB + NEO_KHZ800);\n\nvoid setup() {\n  pixels.begin();\n  pixels.clear(); // start with all pixels off\n  const float brightness = ${level};\n  const uint8_t red = ${values[0]} * brightness + 0.5;\n  const uint8_t green = ${values[1]} * brightness + 0.5;\n  const uint8_t blue = ${values[2]} * brightness + 0.5;\n${assignment}\n  pixels.show(); // send the colours to the strip\n}\n\nvoid loop() {\n  // Nothing to repeat for this steady light.\n}`;
+      ? `  for (int i = 0; i < NUM_LEDS; i++) {\n    leds[i] = CRGB(${values.join(', ')});\n  }`
+      : `  leds[${selected}] = CRGB(${values.join(', ')});`;
+    return `#include "FastLED.h"\n\n// How many LEDs are in your strip?\n#define NUM_LEDS ${LED_COUNT}\n#define DATA_PIN 2\n\n// Create the array of LEDs\nCRGB leds[NUM_LEDS];\n\nvoid setup() {\n  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);\n  FastLED.setBrightness(${brightnessInput.value});\n}\n\nvoid loop() {\n  FastLED.clear();\n${assignment}\n  FastLED.show();\n}`;
   }
-  const pixels = Array.from({length:8}, (_,index) => {
+  const pixels = Array.from({length:LED_COUNT}, (_,index) => {
     const pixel = document.createElement('button');
     pixel.type = 'button';
     pixel.className = 'led-pixel';
@@ -92,8 +92,8 @@ if (ledStrip) {
     displayed = displayed.map((_,index) => targetInput.value==='all'||index===selected ? [...values] : [0,0,0]);
     renderPixels();
     pending.textContent = 'show() sent the colours to the preview.';
-    document.getElementById('led-status').textContent = `${targetInput.value==='all' ? 'All 8 pixels' : `Pixel ${selected}`} · RGB ${values.join(', ')} · other pixels off`;
-    if(targetInput.value==='all') document.getElementById('led-status').textContent = `All 8 pixels · RGB ${values.join(', ')}`;
+    document.getElementById('led-status').textContent = `${targetInput.value==='all' ? `All ${LED_COUNT} pixels` : `Pixel ${selected}`} · RGB ${values.join(', ')} · other pixels off`;
+    if(targetInput.value==='all') document.getElementById('led-status').textContent = `All ${LED_COUNT} pixels · RGB ${values.join(', ')}`;
   }
   [colorInput,brightnessInput].forEach(input => input.addEventListener('input',updateDraft));
   targetInput.addEventListener('change',updateDraft);
