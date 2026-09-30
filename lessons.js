@@ -67,9 +67,10 @@ void loop() {
   get('pot-value').addEventListener('input', updatePot);
   updatePot();
 
+  const CHASE_LED_COUNT = 10;
   let position = 0;
   let timer = null;
-  const chasePixels = Array.from({length:8}, (_,index) => {
+  const chasePixels = Array.from({length:CHASE_LED_COUNT}, (_,index) => {
     const pixel = document.createElement('span');
     pixel.className = 'led-pixel';
     pixel.textContent = index;
@@ -79,7 +80,7 @@ void loop() {
   get('chase-strip').replaceChildren(...chasePixels);
   function chaseRGB() {
     const color = get('chase-color').value;
-    return [1,3,5].map(start => Math.round(parseInt(color.slice(start,start+2),16)*0.2));
+    return [1,3,5].map(start => parseInt(color.slice(start,start+2),16));
   }
   function renderChase() {
     const rgb = chaseRGB();
@@ -88,44 +89,38 @@ void loop() {
       pixel.classList.toggle('lit', index === position && rgb.some(value => value > 0));
     });
     get('chase-strip').setAttribute('aria-label', `Chase at pixel ${position}, RGB ${rgb.join(', ')}`);
-    get('chase-status').textContent = `${timer === null ? 'Paused' : 'Playing'} · pixel ${position} · next ${(position+1)%8}`;
+    get('chase-status').textContent = `${timer === null ? 'Paused' : 'Playing'} · pixel ${position} · next ${(position+1)%CHASE_LED_COUNT}`;
     get('chase-play').textContent = timer === null ? 'Play chase' : 'Pause chase';
     get('chase-play').setAttribute('aria-pressed', String(timer !== null));
   }
-  function advance() { position = (position + 1) % 8; renderChase(); }
+  function advance() { position = (position + 1) % CHASE_LED_COUNT; renderChase(); }
   function pause() { if (timer !== null) clearInterval(timer); timer = null; renderChase(); }
   function play() { timer = setInterval(advance, Number(get('chase-speed').value)); renderChase(); }
   function updateChaseCode() {
     const delay = Number(get('chase-speed').value);
     const rgb = chaseRGB();
     get('chase-speed-output').textContent = `${delay} ms`;
-    get('chase-code').textContent = `#include <Adafruit_NeoPixel.h>
+    get('chase-code').textContent = `#include "FastLED.h"
 
-const int DATA_PIN = 6;
-const int PIXEL_COUNT = 8;
-const unsigned long STEP_MS = ${delay};
-Adafruit_NeoPixel pixels(PIXEL_COUNT, DATA_PIN, NEO_GRB + NEO_KHZ800);
-int position = 0;
-unsigned long lastStep = 0;
+// How many LEDs are in your strip?
+#define NUM_LEDS 10
+#define DATA_PIN 2
+#define STEP_DELAY ${delay}
 
-void drawFrame() {
-  pixels.clear();
-  pixels.setPixelColor(position, ${rgb.join(', ')});
-  pixels.show();
-}
+// Create the array of LEDs
+CRGB leds[NUM_LEDS];
 
 void setup() {
-  pixels.begin();
-  drawFrame(); // start at pixel 0
-  lastStep = millis();
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+  FastLED.setBrightness(20);
 }
 
 void loop() {
-  unsigned long now = millis();
-  if (now - lastStep >= STEP_MS) {
-    lastStep = now;
-    position = (position + 1) % PIXEL_COUNT;
-    drawFrame();
+  for (int i = 0; i < NUM_LEDS; i++) {
+    FastLED.clear();
+    leds[i] = CRGB(${rgb.join(', ')});
+    FastLED.show();
+    delay(STEP_DELAY);
   }
 }`;
     get('chase-copy-status').textContent = '';
