@@ -140,6 +140,121 @@ void loop() {
   window.addEventListener('pagehide', () => { pause(); release(); });
   updateChaseCode();
 
+  const stateCode = `const int BUTTON_PIN = 2;
+const int LED_PIN = 9;
+
+enum LedState { OFF, DIM, BRIGHT };
+LedState state = OFF;
+bool lastButtonState = HIGH;
+
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  bool buttonState = digitalRead(BUTTON_PIN);
+
+  // Move to the next state when the button is pressed
+  if (lastButtonState == HIGH && buttonState == LOW) {
+    if (state == OFF) state = DIM;
+    else if (state == DIM) state = BRIGHT;
+    else state = OFF;
+
+    delay(20); // simple debounce
+  }
+
+  lastButtonState = buttonState;
+
+  if (state == OFF) analogWrite(LED_PIN, 0);
+  if (state == DIM) analogWrite(LED_PIN, 80);
+  if (state == BRIGHT) analogWrite(LED_PIN, 255);
+}`;
+  get('state-code').textContent = stateCode;
+  const stateNames = ['OFF', 'DIM', 'BRIGHT'];
+  const statePwm = [0, 80, 255];
+  let stateIndex = 0;
+  function renderState() {
+    const name = stateNames[stateIndex];
+    const pwm = statePwm[stateIndex];
+    get('state-light').style.setProperty('--level', pwm / 255);
+    get('state-light').setAttribute('aria-label', `LED ${name.toLowerCase()}, PWM ${pwm}`);
+    get('state-status').textContent = `State: ${name} · PWM ${pwm}`;
+    document.querySelectorAll('.state-track [data-state]').forEach((step, index) => step.classList.toggle('active', index === stateIndex));
+  }
+  get('state-button').addEventListener('click', () => { stateIndex = (stateIndex + 1) % stateNames.length; renderState(); });
+  renderState();
+
+  get('mapping-code').textContent = `const int SENSOR_PIN = A0;
+const int LED_PIN = 9;
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop() {
+  int sensorValue = analogRead(SENSOR_PIN);
+  int outputValue = map(sensorValue, 0, 1023, 0, 255);
+  outputValue = constrain(outputValue, 0, 255);
+
+  analogWrite(LED_PIN, outputValue);
+}`;
+  function updateMapping() {
+    const inputValue = Number(get('mapping-value').value);
+    const outputValue = Math.floor(inputValue * 255 / 1023);
+    get('mapping-value-output').textContent = inputValue;
+    get('mapping-raw-visual').textContent = inputValue;
+    get('mapping-output-visual').textContent = outputValue;
+    get('mapping-light').style.setProperty('--level', outputValue / 255);
+    get('mapping-light').setAttribute('aria-label', `LED at PWM ${outputValue} of 255`);
+    get('mapping-status').textContent = `Input ${inputValue} becomes output ${outputValue}`;
+  }
+  get('mapping-value').addEventListener('input', updateMapping);
+  updateMapping();
+
+  get('dht22-code').textContent = `#include "DHT.h"
+
+#define DHT_PIN 2
+#define DHT_TYPE DHT22
+
+DHT dht(DHT_PIN, DHT_TYPE);
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Could not read the DHT22");
+    delay(2000);
+    return;
+  }
+
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print(" C, Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  delay(2000);
+}`;
+  function updateDht22() {
+    const temperature = Number(get('dht-temperature').value);
+    const humidity = Number(get('dht-humidity').value);
+    get('dht-temperature-output').textContent = `${temperature} °C`;
+    get('dht-humidity-output').textContent = `${humidity}%`;
+    get('dht-temperature-visual').textContent = temperature;
+    get('dht-humidity-visual').textContent = humidity;
+    get('dht-status').textContent = `${temperature} °C · ${humidity}% relative humidity`;
+  }
+  get('dht-temperature').addEventListener('input', updateDht22);
+  get('dht-humidity').addEventListener('input', updateDht22);
+  updateDht22();
+
   document.querySelectorAll('[data-copy-lesson]').forEach(button => button.addEventListener('click', async () => {
     const name = button.dataset.copyLesson;
     const code = get(`${name}-code`);
