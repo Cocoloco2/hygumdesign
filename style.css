@@ -163,9 +163,13 @@ nav{gap:12px 18px;justify-content:end}
 .pot-dial span{position:absolute;top:10px;left:calc(50% - 4px);width:8px;height:52px;background:#d9f46b;border-radius:4px}
 .chase-strip{width:100%;margin-top:40px}
 .chase-strip .led-pixel{text-align:center}
+.chase-colors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:4px 0 20px}
+.chase-colors button{display:flex;align-items:center;justify-content:flex-start;gap:8px;min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--ink);font:inherit;font-size:.78rem;cursor:pointer}
+.chase-colors button span{width:18px;height:18px;flex:0 0 18px;border-radius:50%;background:var(--swatch);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.chase-colors button[aria-pressed=true]{border-color:#53633c;background:#edf0e8;box-shadow:0 0 0 1px #53633c}
 #chase-color{width:100%;height:45px;padding:4px;border:1px solid var(--line);background:transparent;cursor:pointer}
 #pot-mapping{font-family:monospace;font-size:.875rem;background:#edf0e8;padding:12px}
-@media(max-width:760px){.lesson-visual{gap:20px}.hardware-button{width:140px;height:140px;margin:10px 0}.pot-dial{width:140px;height:140px;margin:10px}.chase-strip{margin-top:10px}}
+@media(max-width:760px){.lesson-visual{gap:20px}.hardware-button{width:140px;height:140px;margin:10px 0}.pot-dial{width:140px;height:140px;margin:10px}.chase-strip{margin-top:10px}.chase-colors{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .sensor-scene{position:relative;width:100%;height:260px;border:1px solid #66795c;border-radius:8px;overflow:hidden;background:#162219;margin:25px 0;touch-action:pan-y}
 .sensor-symbol{position:absolute;left:20px;top:20px;font-size:2rem;color:#d9f46b}
 .distance-scene{cursor:crosshair;background:repeating-linear-gradient(90deg,#162219 0 39px,#26382b 40px)}

@@ -68,6 +68,8 @@ void loop() {
   updatePot();
 
   const CHASE_LED_COUNT = 10;
+  const chaseColorInput = get('chase-color');
+  const chaseColorButtons = Array.from(document.querySelectorAll('[data-chase-color]'));
   let position = 0;
   let timer = null;
   const chasePixels = Array.from({length:CHASE_LED_COUNT}, (_,index) => {
@@ -79,8 +81,13 @@ void loop() {
   });
   get('chase-strip').replaceChildren(...chasePixels);
   function chaseRGB() {
-    const color = get('chase-color').value;
+    const color = chaseColorInput.value;
     return [1,3,5].map(start => parseInt(color.slice(start,start+2),16));
+  }
+  function syncChaseColors() {
+    const selected = chaseColorInput.value.toLowerCase();
+    get('chase-color-output').textContent = selected.toUpperCase();
+    chaseColorButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.chaseColor === selected)));
   }
   function renderChase() {
     const rgb = chaseRGB();
@@ -100,6 +107,7 @@ void loop() {
     const delay = Number(get('chase-speed').value);
     const rgb = chaseRGB();
     get('chase-speed-output').textContent = `${delay} ms`;
+    syncChaseColors();
     get('chase-code').textContent = `#include "FastLED.h"
 
 // How many LEDs are in your strip?
@@ -129,7 +137,11 @@ void loop() {
   get('chase-play').addEventListener('click', () => { if (timer === null) play(); else pause(); });
   get('chase-step').addEventListener('click', () => { pause(); advance(); });
   get('chase-reset').addEventListener('click', () => { pause(); position = 0; renderChase(); });
-  get('chase-color').addEventListener('input', updateChaseCode);
+  chaseColorButtons.forEach(button => button.addEventListener('click', () => {
+    chaseColorInput.value = button.dataset.chaseColor;
+    updateChaseCode();
+  }));
+  chaseColorInput.addEventListener('input', updateChaseCode);
   get('chase-speed').addEventListener('input', () => {
     const wasPlaying = timer !== null;
     pause(); updateChaseCode();
