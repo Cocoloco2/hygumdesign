@@ -80,6 +80,8 @@ void loop() {
     color: starterColors[index] || [217, 244, 107]
   }));
   let selectedPatternIndex = 1;
+  const selection = new Set([1]);
+  let rainbowHue = 0;
   let chaseOffset = 0;
   let timer = null;
   const chasePixels = Array.from({length:CHASE_LED_COUNT}, (_,index) => {
@@ -95,8 +97,15 @@ void loop() {
     button.type = 'button';
     button.className = 'led-pixel chase-pattern-led';
     button.textContent = index;
-    button.addEventListener('click', () => {
-      selectedPatternIndex = index;
+    button.addEventListener('click', event => {
+      if (event.ctrlKey || event.metaKey || get('chase-multi').checked) {
+        if (selection.has(index) && selection.size > 1) selection.delete(index);
+        else selection.add(index);
+      } else {
+        selection.clear();
+        selection.add(index);
+      }
+      selectedPatternIndex = selection.has(index) ? index : [...selection][0];
       renderPatternEditor();
     });
     return button;
@@ -123,7 +132,7 @@ void loop() {
     const selected = rgbToHex(chasePattern[selectedPatternIndex].color);
     chaseColorInput.value = selected;
     get('chase-color-output').textContent = selected.toUpperCase();
-    chaseColorButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.chaseColor === selected)));
+    chaseColorButtons.forEach(button => button.setAttribute('aria-pressed', String([...selection].every(i => !chasePattern[i].rainbow && rgbToHex(chasePattern[i].color) === button.dataset.chaseColor))));
   }
   function activePattern() {
     return chasePattern.map((item, index) => ({...item, index})).filter(item => item.active);
@@ -132,23 +141,28 @@ void loop() {
     const active = activePattern();
     const selected = chasePattern[selectedPatternIndex];
     get('chase-pattern-count').textContent = `${active.length} of ${CHASE_LED_COUNT}`;
-    get('chase-pattern-index').textContent = selectedPatternIndex;
-    get('chase-pattern-active').checked = selected.active;
+    get('chase-pattern-index').textContent = [...selection].sort((a,b) => a-b).join(', ');
+    get('chase-pattern-active').checked = [...selection].every(i => chasePattern[i].active);
+    get('chase-pattern-active').indeterminate = [...selection].some(i => chasePattern[i].active) && !get('chase-pattern-active').checked;
     chasePatternButtons.forEach((button, index) => {
       const item = chasePattern[index];
       button.style.setProperty('--pixel-color', item.active ? `rgb(${item.color.join(',')})` : '#34423b');
       button.classList.toggle('lit', item.active);
-      button.dataset.selected = String(index === selectedPatternIndex);
-      button.setAttribute('aria-pressed', String(item.active));
-      button.setAttribute('aria-label', `LED ${index}, ${item.active ? `included, RGB ${item.color.join(', ')}` : 'not included'}${index === selectedPatternIndex ? ', selected for editing' : ''}`);
+      button.dataset.selected = String(selection.has(index));
+      button.setAttribute('aria-pressed', String(selection.has(index)));
+      button.setAttribute('aria-label', `LED ${index}, ${item.active ? `included, RGB ${item.color.join(', ')}` : 'not included'}${selection.has(index) ? ', selected for editing' : ''}`);
     });
     syncChaseColors();
+    get('chase-rainbow').setAttribute('aria-pressed', String([...selection].every(i => chasePattern[i].rainbow)));
+    chasePatternButtons.forEach((button, index) => {
+      button.textContent = index + (chasePattern[index].rainbow && chasePattern[index].active ? ' 🌈' : '');
+    });
   }
   function renderChase() {
     const active = activePattern();
     chasePixels.forEach((pixel, index) => {
       const patternLed = active.find(item => (item.index + chaseOffset) % CHASE_LED_COUNT === index);
-      const color = patternLed ? patternLed.color : [52, 66, 59];
+      const color = patternLed ? (patternLed.rainbow ? rainbowRgb(rainbowHue, 256) : patternLed.color) : [52, 66, 59];
       pixel.style.setProperty('--pixel-color', `rgb(${color.join(',')})`);
       pixel.classList.toggle('lit', Boolean(patternLed));
     });
@@ -158,47 +172,35 @@ void loop() {
     get('chase-play').textContent = timer === null ? 'Play chase' : 'Pause chase';
     get('chase-play').setAttribute('aria-pressed', String(timer !== null));
   }
-  function advance() { chaseOffset = (chaseOffset + 1) % CHASE_LED_COUNT; renderChase(); }
+  function advance() { rainbowHue = (rainbowHue + 8) % 256; chaseOffset = (chaseOffset + 1) % CHASE_LED_COUNT; renderChase(); }
   function pause() { if (timer !== null) clearInterval(timer); timer = null; renderChase(); }
   function play() { timer = setInterval(advance, Number(get('chase-speed').value)); renderChase(); }
   function updateChaseCode() {
     const delay = Number(get('chase-speed').value);
     const active = activePattern();
-    const positions = active.map(item => item.index).join(', ');
-    const colors = active.map(item => `  CRGB(${item.color.join(', ')})`).join(',\n');
+    const assignments = active.map(item => `    leds[(${item.index} + offset) % NUM_LEDS] = ${item.rainbow ? 'CHSV(hue, 255, 255)' : 'CRGB(' + item.color.join(', ') + ')'};`).join('\n');
+    const hasRainbow = active.some(item => item.rainbow);
     get('chase-speed-output').textContent = `${delay} ms`;
     get('chase-code').textContent = `#include "FastLED.h"
 
 #define NUM_LEDS 10
 #define DATA_PIN 2
-#define STEP_DELAY ${delay}
-#define PATTERN_COUNT ${active.length}
 
 CRGB leds[NUM_LEDS];
-int patternPositions[PATTERN_COUNT] = {${positions}};
-CRGB patternColors[PATTERN_COUNT] = {
-${colors}
-};
-
+${hasRainbow ? 'byte hue = 0; // Rainbow colour, from 0 to 255\n' : ''}
 void setup() {
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  FastLED.setBrightness(20);
+  FastLED.setBrightness(51); // 20% of 255
 }
 
 void loop() {
-  // Move the whole pattern one step at a time
   for (int offset = 0; offset < NUM_LEDS; offset++) {
     FastLED.clear();
-
-    // Draw every LED in the pattern
-    for (int i = 0; i < PATTERN_COUNT; i++) {
-      int ledIndex = (patternPositions[i] + offset) % NUM_LEDS;
-      leds[ledIndex] = patternColors[i];
-    }
-
+    // Each line moves one LED with its own colour.
+${assignments}
     FastLED.show();
-    delay(STEP_DELAY);
-  }
+    delay(${delay});
+${hasRainbow ? '    hue += 8; // Change rainbow colour for the next step\n' : ''}  }
 }`;
     get('chase-copy-status').textContent = '';
     renderPatternEditor();
@@ -206,38 +208,33 @@ void loop() {
   }
   get('chase-play').addEventListener('click', () => { if (timer === null) play(); else pause(); });
   get('chase-step').addEventListener('click', () => { pause(); advance(); });
-  get('chase-reset').addEventListener('click', () => { pause(); chaseOffset = 0; renderChase(); });
-  get('chase-pattern-active').addEventListener('change', event => {
-    if (!event.target.checked && activePattern().length === 1) {
-      event.target.checked = true;
-      return;
-    }
-    chasePattern[selectedPatternIndex].active = event.target.checked;
+  get('chase-reset').addEventListener('click', () => { pause(); chaseOffset = 0; rainbowHue = 0; renderChase(); });
+  function applyToSelection(change) {
+    selection.forEach(index => change(chasePattern[index], index));
     updateChaseCode();
+  }
+  get('chase-pattern-active').addEventListener('change', event => {
+    applyToSelection(item => { item.active = event.target.checked; });
   });
   get('chase-only-this').addEventListener('click', () => {
-    chasePattern.forEach((item, index) => { item.active = index === selectedPatternIndex; });
-    updateChaseCode();
+    applyToSelection(item => { item.active = false; });
   });
   get('chase-select-all').addEventListener('click', () => {
-    chasePattern.forEach(item => { item.active = true; });
-    updateChaseCode();
+    for (let i = 0; i < CHASE_LED_COUNT; i++) selection.add(i);
+    renderPatternEditor();
   });
   get('chase-rainbow').addEventListener('click', () => {
-    const active = activePattern();
-    active.forEach((item, index) => { chasePattern[item.index].color = rainbowRgb(index, active.length); });
-    updateChaseCode();
+    applyToSelection(item => { item.active = true; item.rainbow = true; });
   });
-  chaseColorButtons.forEach(button => button.addEventListener('click', () => {
-    chasePattern[selectedPatternIndex].active = true;
-    chasePattern[selectedPatternIndex].color = hexToRgb(button.dataset.chaseColor);
-    updateChaseCode();
-  }));
-  chaseColorInput.addEventListener('input', () => {
-    chasePattern[selectedPatternIndex].active = true;
-    chasePattern[selectedPatternIndex].color = hexToRgb(chaseColorInput.value);
-    updateChaseCode();
-  });
+  function applyColor(hex) {
+    applyToSelection(item => {
+      item.active = true;
+      item.rainbow = false;
+      item.color = hexToRgb(hex);
+    });
+  }
+  chaseColorButtons.forEach(button => button.addEventListener('click', () => applyColor(button.dataset.chaseColor)));
+  chaseColorInput.addEventListener('input', () => applyColor(chaseColorInput.value));
   get('chase-speed').addEventListener('input', () => {
     const wasPlaying = timer !== null;
     pause(); updateChaseCode();
