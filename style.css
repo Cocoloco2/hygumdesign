@@ -35,7 +35,7 @@ nav a:hover{color:#55720e}
 .heading{display:flex;justify-content:space-between;align-items:end;gap:35px;margin-bottom:32px}
 .heading h2{margin:0}
 .heading>p{max-width:310px;margin:0}
-#work .heading>p{text-align:right}
+#work .heading>p,#lab .heading>p{text-align:right}
 .projects{display:grid;grid-template-columns:1fr 1fr;gap:44px 28px}
 .project{display:block;text-decoration:none;min-width:0}
 .featured{grid-column:1/-1}
